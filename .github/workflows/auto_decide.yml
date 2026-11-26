@@ -26,8 +26,13 @@ jobs:
       - name: Run secured trading simulation
         run: python scripts/algorithm.py
 
-      - name: Save simulation results
+    
+      - name: Save simulation results and decision log
         uses: actions/upload-artifact@v4
         with:
           name: ensim-simulation
-          path: simulation_decision.json
+          path: |
+            simulation_decision.json
+            output/decision_log.jsonl
+          if-no-files-found: error
+

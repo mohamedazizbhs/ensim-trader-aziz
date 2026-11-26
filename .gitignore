@@ -1,0 +1,26 @@
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Python environments
+.venv/
+venv/
+env/
+
+# Temporary files
+*.tmp
+*.log
+
+# Local simulation logs
+output/
+
+# Local configuration
+.env
+.env.*
+
+# Editor and system files
+.vscode/
+.DS_Store
+Thumbs.db

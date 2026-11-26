@@ -2,6 +2,8 @@
 import json
 import math
 import requests
+from datetime import datetime, timezone
+
 from pathlib import Path
 
 # ==================================================
@@ -384,7 +386,35 @@ def main():
         "\nNo real market decisions "
         "were changed."
     )
-
+    
+    # Keep a trace of simulated trading decisions
+    log_dir = Path("output")
+    log_dir.mkdir(exist_ok=True)
+    
+    log_file = log_dir / "decision_log.jsonl"
+    
+    log_entry = {
+            "timestamp": datetime.now(
+                timezone.utc
+            ).isoformat(),
+            "mode": "simulation",
+            "market_observations": len(history),
+            "decisions": decisions,
+            "remaining_cash_simulated": round(
+                remaining_money, 2
+            )
+        }
+    
+    with log_file.open(
+            "a",
+            encoding="utf-8"
+        ) as f:
+            f.write(
+                json.dumps(log_entry) + "\n"
+            )
+    
+    print(f"Decision log saved to: {log_file}")
+    
 
 # ==================================================
 # PROGRAM ENTRY POINT
