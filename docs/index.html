@@ -477,6 +477,157 @@ footer {
 </style>
 </head>
 
+<section id="trader-comparison" class="trader-comparison">
+  <h2>Comparaison des traders</h2>
+  <p>
+    Valeur actuelle des portefeuilles ENSIM,
+    argent disponible et produits inclus.
+  </p>
+
+  <div id="trader-bars">
+    Chargement de la comparaison...
+  </div>
+
+  <small id="trader-comparison-date"></small>
+</section>
+
+<style>
+  .trader-comparison {
+    margin: 28px auto;
+    padding: 24px;
+    border: 1px solid #2b3b56;
+    border-radius: 16px;
+    background: #151f32;
+    color: #edf3ff;
+    max-width: 1200px;
+    font-family: inherit;
+  }
+
+  .trader-comparison h2 {
+    margin: 0 0 8px;
+  }
+
+  .trader-comparison p,
+  .trader-comparison small {
+    color: #a9b8d1;
+  }
+
+  .trader-item {
+    margin-top: 22px;
+  }
+
+  .trader-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .trader-track {
+    height: 14px;
+    background: #283650;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .trader-fill {
+    height: 100%;
+    background: #4389ff;
+    border-radius: 8px;
+  }
+
+  .trader-fill.mine {
+    background: #27c89b;
+  }
+
+  #trader-comparison-date {
+    display: block;
+    margin-top: 20px;
+  }
+</style>
+
+<script>
+  async function loadTraderComparison() {
+    const container =
+      document.getElementById("trader-bars");
+
+    try {
+      const response = await fetch(
+        "./data/portfolio_comparison.json",
+        { cache: "no-store" }
+      );
+
+      if (!response.ok) {
+        throw new Error("Comparison file unavailable");
+      }
+
+      const data = await response.json();
+
+      const traders = [...data.comparison].sort(
+        (a, b) => b.total_value - a.total_value
+      );
+
+      const maxValue = Math.max(
+        ...traders.map(t => t.total_value),
+        1
+      );
+
+      container.replaceChildren();
+
+      for (const trader of traders) {
+        const item = document.createElement("div");
+        item.className = "trader-item";
+
+        const row = document.createElement("div");
+        row.className = "trader-row";
+
+        const name = document.createElement("strong");
+        name.textContent = trader.name;
+
+        const value = document.createElement("strong");
+        value.textContent =
+          trader.total_value.toLocaleString("fr-FR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+
+        row.append(name, value);
+
+        const track = document.createElement("div");
+        track.className = "trader-track";
+
+        const fill = document.createElement("div");
+        fill.className = "trader-fill";
+
+        if (trader.trader_id === "aziz") {
+          fill.classList.add("mine");
+        }
+
+        fill.style.width =
+          (trader.total_value / maxValue * 100) + "%";
+
+        track.appendChild(fill);
+        item.append(row, track);
+        container.appendChild(item);
+      }
+
+      document.getElementById(
+        "trader-comparison-date"
+      ).textContent =
+        "Instantané : " +
+        new Date(data.timestamp).toLocaleString("fr-FR") +
+        " — Valeurs actuelles, pas rendements historiques.";
+
+    } catch (error) {
+      container.textContent =
+        "Comparaison indisponible : " + error.message;
+    }
+  }
+
+  loadTraderComparison();
+</script>
+
 <body>
 <div class="layout">
 
