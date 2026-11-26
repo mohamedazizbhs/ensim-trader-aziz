@@ -957,6 +957,76 @@
     "exofri/ensim-trade-center/main/" +
     "docs/data/market.json";
 
+const HOLDINGS_URL =
+  "https://raw.githubusercontent.com/" +
+  "exofri/ensim-trade-center/main/" +
+  "traders/aziz/holdings.json";
+
+async function fetchHoldings() {
+  const response = await fetch(
+    HOLDINGS_URL,
+    { cache: "no-store" }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Erreur portefeuille : HTTP " + response.status
+    );
+  }
+
+  return await response.json();
+}
+
+function calculatePortfolio(holdings, market) {
+  const cash = Number(holdings.money);
+  const quantities = holdings.products;
+
+  if (
+    !Number.isFinite(cash) ||
+    !quantities ||
+    typeof quantities !== "object"
+  ) {
+    throw new Error("Format du portefeuille invalide.");
+  }
+
+  const values = {};
+  let invested = 0;
+
+  for (const product of market.products) {
+    const quantity = Number(quantities[product]);
+
+    const prices = market.history
+      .map(row => Number(row[product]))
+      .filter(Number.isFinite);
+
+    const price = prices[prices.length - 1];
+
+    if (
+      !Number.isFinite(quantity) ||
+      !Number.isFinite(price)
+    ) {
+      throw new Error(
+        "Données manquantes pour " + product
+      );
+    }
+
+    values[product] = {
+      quantity,
+      price,
+      value: quantity * price
+    };
+
+    invested += values[product].value;
+  }
+
+  return {
+    cash,
+    invested,
+    total: cash + invested,
+    values
+  };
+}
+
   const COLORS = {
     sage: "#71856a",
     terra: "#c47d62",
@@ -1570,6 +1640,15 @@
         history: data.history,
         products
       };
+
+const holdings = await fetchHoldings();
+
+const portfolio = calculatePortfolio(
+  holdings,
+  market
+);
+
+console.log("ENSIM PORTFOLIO", portfolio);
 
       updateKPIs();
       renderProducts();
