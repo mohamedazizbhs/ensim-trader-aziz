@@ -110,6 +110,58 @@ def main():
 
     print(f"\nSaved to: {output}")
 
+    # Historical portfolio snapshots
+    history_file = Path(
+        "docs/data/portfolio_history.json"
+    )
+
+    if history_file.exists():
+        with history_file.open("r", encoding="utf-8") as f:
+            portfolio_history = json.load(f)
+    else:
+        portfolio_history = {"snapshots": []}
+
+    snapshots = portfolio_history["snapshots"]
+
+    new_snapshot = {
+        "timestamp": result["timestamp"],
+        "market_observations": len(history),
+        "prices": prices,
+        "comparison": comparison
+    }
+
+    # Avoid recording identical data repeatedly
+    is_duplicate = False
+
+    if snapshots:
+        last_snapshot = snapshots[-1]
+
+        is_duplicate = (
+            last_snapshot.get("prices") == prices
+            and last_snapshot.get("comparison") == comparison
+        )
+
+    if not is_duplicate:
+        snapshots.append(new_snapshot)
+
+        with history_file.open(
+            "w",
+            encoding="utf-8"
+        ) as f:
+            json.dump(
+                portfolio_history,
+                f,
+                indent=2,
+                ensure_ascii=False
+            )
+
+        print(
+            f"New portfolio snapshot saved. "
+            f"Total: {len(snapshots)}"
+        )
+    else:
+        print("No portfolio change. Snapshot skipped.")
+
 
 if __name__ == "__main__":
     main()
