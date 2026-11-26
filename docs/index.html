@@ -1,0 +1,1623 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ENSIM Trade Center — Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #f6f5f0;
+      --white: #ffffff;
+      --ink: #282d28;
+      --muted: #858b83;
+      --border: #e8e9e2;
+      --sage: #71856a;
+      --sage-dark: #486649;
+      --sage-light: #e9efe8;
+      --terra: #c47d62;
+      --terra-light: #f8ebe4;
+      --gold: #b9a167;
+      --shadow: 0 8px 30px rgba(35,40,32,.035);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+      font-size: 14px;
+    }
+
+    h1, h2, h3 {
+      font-family: Manrope, sans-serif;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: white;
+      border-right: 1px solid var(--border);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 55px;
+    }
+
+    .brand-icon {
+      background: var(--sage);
+      color: white;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand strong {
+      font-size: 15px;
+      font-family: Manrope, sans-serif;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      margin-top: 4px;
+      font-size: 10px;
+    }
+
+    .nav-title {
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    nav a {
+      display: block;
+      padding: 13px;
+      margin-bottom: 6px;
+      border-radius: 10px;
+      color: #6f766e;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background: var(--sage-light);
+      color: var(--sage-dark);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    /* MAIN */
+
+    main {
+      width: 100%;
+      max-width: 1650px;
+      min-width: 0;
+      margin: 0 auto;
+      padding: 38px 42px 70px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .eyebrow {
+      color: var(--sage);
+      letter-spacing: 2px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 33px;
+      letter-spacing: -1.5px;
+      margin: 9px 0;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .refresh {
+      background: var(--sage);
+      border: none;
+      padding: 12px 17px;
+      border-radius: 10px;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .refresh:hover { background: var(--sage-dark); }
+    .refresh:disabled { opacity: .6; }
+
+    .notice {
+      padding: 17px 20px;
+      border: 1px solid #e9dfc7;
+      background: #fbf7eb;
+      color: #827252;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.8;
+      margin-bottom: 26px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin: 33px 0 16px;
+      gap: 12px;
+    }
+
+    .section-heading h2 {
+      font-size: 18px;
+      letter-spacing: -.5px;
+      margin: 0;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 7px 0 0;
+      line-height: 1.7;
+    }
+
+    .tag {
+      background: var(--sage-light);
+      color: var(--sage-dark);
+      font-size: 11px;
+      padding: 8px 12px;
+      border-radius: 30px;
+      font-weight: 700;
+    }
+
+    /* CARDS */
+
+    .grid {
+      display: grid;
+      gap: 17px;
+    }
+
+    .kpis { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .products { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .two { grid-template-columns: 1.5fr 1fr; }
+    .half { grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      min-width: 0;
+      box-shadow: var(--shadow);
+    }
+
+    .card-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .number {
+      font-family: Manrope, sans-serif;
+      font-weight: 800;
+      font-size: 32px;
+      letter-spacing: -1px;
+      margin: 18px 0 8px;
+    }
+
+    .card-note {
+      color: #9ba197;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .product-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .product-name {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .chip {
+      border-radius: 8px;
+      padding: 8px 11px;
+      font-weight: 800;
+      font-size: 11px;
+      display: inline-block;
+    }
+
+    .buy { color: var(--sage-dark); background: var(--sage-light); }
+    .sell { color: #a6634d; background: var(--terra-light); }
+    .hold { color: #797f77; background: #f0f1ed; }
+
+    .price {
+      font-family: Manrope, sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      margin: 20px 0 7px;
+    }
+
+    .product-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+      padding-top: 17px;
+    }
+
+    .meta-label {
+      font-size: 10px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .meta-value {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .positive { color: var(--sage-dark); }
+    .negative { color: var(--terra); }
+
+    /* CHARTS */
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .panel-head h3 {
+      font-size: 15px;
+      margin: 0;
+    }
+
+    .panel-head p {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 7px 0 0;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .controls button {
+      border: 1px solid var(--border);
+      background: #f7f8f4;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .controls button.active {
+      background: var(--sage-light);
+      color: var(--sage-dark);
+      border-color: #d6e1d3;
+    }
+
+    .chart {
+      position: relative;
+      height: 320px;
+    }
+
+    .chart.small { height: 255px; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 18px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .legend span::before {
+      content: "";
+      display: inline-block;
+      width: 17px;
+      height: 3px;
+      background: var(--color);
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    /* EXPLANATIONS */
+
+    .explain {
+      border-radius: 12px;
+      background: var(--sage-light);
+      color: #526a53;
+      font-size: 12px;
+      padding: 17px;
+      line-height: 1.8;
+      margin-top: 20px;
+    }
+
+    .signal-item {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 11px;
+    }
+
+    .signal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .signal-item p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .averages {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .average-box {
+      background: #f7f8f4;
+      padding: 12px;
+      border-radius: 9px;
+    }
+
+    .average-box small {
+      color: var(--muted);
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .average-box strong {
+      font-size: 12px;
+    }
+
+    .empty {
+      border: 1px dashed #d7dbd2;
+      border-radius: 12px;
+      padding: 18px;
+      color: #747b72;
+      background: #fafbf8;
+      line-height: 1.8;
+      font-size: 12px;
+    }
+
+    .text-panel p {
+      font-size: 12px;
+      line-height: 1.9;
+      color: #727b71;
+    }
+
+    .table-scroll { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    th {
+      padding: 13px 10px;
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 13px 10px;
+      border-bottom: 1px solid #f0f1ec;
+    }
+
+    .status {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .error { color: #af5b46; }
+
+    footer {
+      text-align: center;
+      color: #a2a79e;
+      font-size: 11px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 76px minmax(0,1fr); }
+      aside { padding: 24px 10px; }
+      .brand-icon { margin: auto; }
+      .brand-text, .nav-title, nav a span, .sidebar-footer {
+        display: none;
+      }
+      nav a { text-align: center; }
+      main { padding: 30px 24px; }
+      .two { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 750px) {
+      .layout { display: block; }
+      aside {
+        position: static;
+        height: auto;
+        padding: 13px 18px;
+      }
+      .brand { margin-bottom: 12px; }
+      .brand-text { display: block; }
+      nav { display: flex; overflow-x: auto; }
+      nav a { white-space: nowrap; }
+      .kpis, .half { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .products { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; align-items: start; }
+    }
+
+    @media (max-width: 480px) {
+      .kpis, .half { grid-template-columns: 1fr; }
+      main { padding: 22px 15px; }
+      .card { padding: 18px; }
+      .panel-head { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="layout">
+
+  <aside>
+    <div class="brand">
+      <div class="brand-icon">E.</div>
+      <div class="brand-text">
+        <strong>ENSIM Trader</strong>
+        <small>TRADE CENTER / BI</small>
+      </div>
+    </div>
+
+    <div class="nav-title">Navigation</div>
+
+    <nav>
+      <a class="active" href="#overview">◫ <span>Vue d'ensemble</span></a>
+      <a href="#market">⌁ <span>Analyse des prix</span></a>
+      <a href="#signals">◎ <span>Mes décisions</span></a>
+      <a href="#risk">◈ <span>Analyse du risque</span></a>
+      <a href="#history">▤ <span>Historique</span></a>
+      <a href="#portfolio">◉ <span>Portefeuille</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      Projet ENSIM · TP2
+      <br>
+      Business Intelligence
+      <br>
+      Trading simulé
+    </div>
+  </aside>
+
+  <main id="overview">
+
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Business Intelligence / TP2</div>
+        <h1>ENSIM Trade Center</h1>
+        <p class="subtitle">
+          Comprendre le marché, analyser les tendances
+          et expliquer chaque décision.
+        </p>
+      </div>
+
+      <button class="refresh" id="refresh">
+        ↻ Actualiser les données
+      </button>
+    </header>
+
+    <div class="notice">
+      <strong>Mode analyse du marché.</strong>
+      Ce dashboard calcule les signaux à partir des données
+      historiques ENSIM. Les signaux affichés ne représentent
+      pas des transactions exécutées. Le portefeuille officiel
+      n'est pas encore connecté.
+    </div>
+
+    <!-- KPIS -->
+
+    <section>
+      <div class="section-heading">
+        <div>
+          <h2>Vue d'ensemble</h2>
+          <p>Les informations essentielles du marché.</p>
+        </div>
+        <span class="tag">Marché ENSIM</span>
+      </div>
+
+      <div class="grid kpis">
+        <article class="card">
+          <div class="card-label">Observations historiques</div>
+          <div class="number" id="observations">—</div>
+          <div class="card-note">
+            Nombre de périodes disponibles.
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-label">Produits analysés</div>
+          <div class="number" id="productsCount">—</div>
+          <div class="card-note">
+            Produits A, B et C.
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-label">Signaux d'achat</div>
+          <div class="number" id="buyCount">—</div>
+          <div class="card-note">
+            Produits avec signal BUY.
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-label">Signaux de vente</div>
+          <div class="number" id="sellCount">—</div>
+          <div class="card-note">
+            Produits avec signal SELL.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+
+    <section id="market">
+      <div class="section-heading">
+        <div>
+          <h2>État actuel des produits</h2>
+          <p>
+            Derniers prix, tendances et risques récents.
+          </p>
+        </div>
+        <span class="tag">3 produits</span>
+      </div>
+
+      <div class="grid products" id="productCards"></div>
+
+      <div class="section-heading">
+        <div>
+          <h2>Analyse technique</h2>
+          <p>
+            Compare les prix avec les moyennes mobiles
+            utilisées dans notre stratégie.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid two">
+
+        <article class="card">
+          <div class="panel-head">
+            <div>
+              <h3>Évolution des prix</h3>
+              <p>
+                Prix observé et tendances sur 5, 12
+                et 30 périodes.
+              </p>
+            </div>
+            <div class="controls">
+              <button data-product="A" class="active">A</button>
+              <button data-product="B">B</button>
+              <button data-product="C">C</button>
+            </div>
+          </div>
+
+          <div class="chart">
+            <canvas id="priceChart"></canvas>
+          </div>
+
+          <div class="legend">
+            <span style="--color:#282d28">Prix</span>
+            <span style="--color:#71856a">MM5</span>
+            <span style="--color:#c47d62">MM12</span>
+            <span style="--color:#b9a167">MM30</span>
+          </div>
+
+          <div class="controls" style="margin-top:20px">
+            <button data-range="30">30 périodes</button>
+            <button data-range="90" class="active">
+              90 périodes
+            </button>
+            <button data-range="all">Tout</button>
+          </div>
+        </article>
+
+        <article class="card text-panel">
+          <div class="panel-head">
+            <div>
+              <h3>Comment fonctionne notre stratégie ?</h3>
+              <p>
+                Les règles utilisées par algorithm.py.
+              </p>
+            </div>
+          </div>
+
+          <p>
+            <strong>MM5 :</strong> moyenne des 5 derniers prix.
+            Elle réagit rapidement aux changements.
+          </p>
+
+          <p>
+            <strong>MM12 :</strong> moyenne des 12 derniers
+            prix. Elle indique une tendance moins sensible
+            aux variations ponctuelles.
+          </p>
+
+          <p>
+            <strong>MM30 :</strong> moyenne des 30 derniers
+            prix. Elle sert de filtre de tendance.
+          </p>
+
+          <div class="explain">
+            <strong>BUY :</strong> MM5 dépasse MM12 de plus de
+            1 % et le prix est au-dessus de MM30.
+            <br><br>
+            <strong>SELL :</strong> MM5 est inférieure à MM12
+            de plus de 1 %, ou le prix passe sous MM30.
+            <br><br>
+            <strong>HOLD :</strong> aucune des conditions
+            précédentes n'est remplie.
+          </div>
+
+          <p>
+            Les règles sont déterministes : elles ne
+            garantissent pas que le marché évoluera
+            dans le sens attendu.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- SIGNALS -->
+
+    <section id="signals">
+      <div class="section-heading">
+        <div>
+          <h2>Mes décisions</h2>
+          <p>
+            Comprendre précisément pourquoi l'algorithme
+            propose un achat, une vente ou une conservation.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid half">
+        <article class="card">
+          <div class="panel-head">
+            <div>
+              <h3>Signaux par produit</h3>
+              <p>
+                Calculés avec la dernière période disponible.
+              </p>
+            </div>
+          </div>
+          <div id="signalDetails"></div>
+        </article>
+
+        <article class="card text-panel">
+          <h3>Comment interpréter un signal ?</h3>
+
+          <p>
+            La valeur du signal varie entre -1 et +1.
+            Dans notre stratégie, nous utilisons
+            uniquement -0,5, 0 et +0,5.
+          </p>
+
+          <div class="explain">
+            <strong>+0,50</strong> : demande d'achat
+            de 50 unités.
+            <br><br>
+            <strong>-0,50</strong> : demande de vente
+            de 50 unités.
+            <br><br>
+            <strong>0,00</strong> : aucune transaction
+            demandée.
+          </div>
+
+          <p>
+            Il s'agit de signaux théoriques. Les ordres
+            réels devront aussi respecter l'argent
+            disponible et les quantités détenues.
+          </p>
+
+          <p>
+            <strong>Important :</strong> cette page ne modifie
+            pas le fichier decision.json.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- RISK -->
+
+    <section id="risk">
+      <div class="section-heading">
+        <div>
+          <h2>Analyse du risque</h2>
+          <p>
+            Identifier les fluctuations et les fortes
+            baisses des produits.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid half">
+
+        <article class="card">
+          <div class="panel-head">
+            <div>
+              <h3>Variation sur 30 périodes</h3>
+              <p>
+                Évolution récente du prix de chaque produit.
+              </p>
+            </div>
+          </div>
+          <div class="chart small">
+            <canvas id="changeChart"></canvas>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="panel-head">
+            <div>
+              <h3>Drawdown historique des produits</h3>
+              <p>
+                Plus forte baisse depuis un sommet
+                sur l'historique disponible.
+              </p>
+            </div>
+          </div>
+          <div class="chart small">
+            <canvas id="drawdownChart"></canvas>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="explain" id="volatilityInfo">
+        Calcul des indicateurs de risque en cours...
+      </div>
+
+      <p class="card-note" style="margin-top:12px">
+        Ces indicateurs décrivent le risque des prix des
+        produits, et non le risque réel de ton portefeuille.
+        Le risque du portefeuille nécessitera les données
+        personnelles du simulateur.
+      </p>
+    </section>
+
+    <!-- HISTORY -->
+
+    <section id="history">
+      <div class="section-heading">
+        <div>
+          <h2>Historique des signaux</h2>
+          <p>
+            Reconstitution des décisions de l'algorithme
+            sur les 12 dernières périodes.
+          </p>
+        </div>
+      </div>
+
+      <article class="card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Période</th>
+                <th>Produit A</th>
+                <th>Produit B</th>
+                <th>Produit C</th>
+              </tr>
+            </thead>
+            <tbody id="signalHistory"></tbody>
+          </table>
+        </div>
+
+        <p class="card-note">
+          Cet historique est recalculé depuis les prix
+          disponibles. Il ne constitue pas un journal
+          de transactions réellement exécutées.
+        </p>
+      </article>
+    </section>
+
+    <!-- PORTFOLIO -->
+
+    <section id="portfolio">
+      <div class="section-heading">
+        <div>
+          <h2>Portefeuille et performances</h2>
+          <p>
+            Partie à connecter au portefeuille personnel
+            ENSIM.
+          </p>
+        </div>
+        <span class="tag">Connexion nécessaire</span>
+      </div>
+
+      <div class="grid half">
+        <article class="card">
+          <h3>Mon portefeuille</h3>
+          <div class="empty" style="margin-top:18px">
+            <strong>Données non disponibles.</strong>
+            <br>
+            Le HOLDINGS_URL personnel est nécessaire
+            pour connaître l'argent disponible et
+            les quantités de A, B et C détenues.
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Comparaison des performances</h3>
+          <div class="empty" style="margin-top:18px">
+            <strong>Comparaison à compléter.</strong>
+            <br>
+            Le rapport devra comparer la performance
+            de notre portefeuille aux trois traders
+            de référence du simulateur : random trader,
+            random buyer et random seller.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="status" id="status">
+      Chargement des données...
+    </div>
+
+    <footer>
+      ENSIM Trade Center · Business Intelligence · TP2
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const MARKET_URL =
+    "https://raw.githubusercontent.com/" +
+    "exofri/ensim-trade-center/main/" +
+    "docs/data/market.json";
+
+  const COLORS = {
+    sage: "#71856a",
+    terra: "#c47d62",
+    gold: "#b9a167",
+    ink: "#282d28",
+    grid: "#eeefe9"
+  };
+
+  const $ = id => document.getElementById(id);
+
+  let market = null;
+  let selectedProduct = "A";
+  let selectedRange = "90";
+
+  let priceChart = null;
+  let changeChart = null;
+  let drawdownChart = null;
+
+  function fmt(value, digits = 2) {
+    return Number.isFinite(value)
+      ? value.toLocaleString("fr-FR", {
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits
+        })
+      : "—";
+  }
+
+  function percent(value) {
+    if (!Number.isFinite(value)) return "—";
+
+    return (value > 0 ? "+" : "") +
+      fmt(value, 2) + " %";
+  }
+
+  function mean(values) {
+    return values.reduce((sum, value) => sum + value, 0)
+      / values.length;
+  }
+
+  function movingAverage(prices, windowSize) {
+    return prices.map((_, index) => {
+      if (index + 1 < windowSize) return null;
+
+      return mean(
+        prices.slice(
+          index + 1 - windowSize,
+          index + 1
+        )
+      );
+    });
+  }
+
+  // Identique à compute_signal() dans algorithm.py
+
+  function computeSignal(prices) {
+    if (prices.length < 30) {
+      return {
+        value: 0,
+        reason: "Historique insuffisant : 30 périodes requises.",
+        ma5: null,
+        ma12: null,
+        ma30: null
+      };
+    }
+
+    const ma5 = mean(prices.slice(-5));
+    const ma12 = mean(prices.slice(-12));
+    const ma30 = mean(prices.slice(-30));
+    const current = prices[prices.length - 1];
+
+    if (ma12 <= 0 || ma30 <= 0) {
+      return {
+        value: 0,
+        reason: "Moyenne invalide.",
+        ma5, ma12, ma30
+      };
+    }
+
+    const difference = (ma5 - ma12) / ma12;
+
+    if (difference > 0.01 && current > ma30) {
+      return {
+        value: 0.5,
+        reason:
+          "MM5 dépasse MM12 de plus de 1 % et " +
+          "le prix est supérieur à MM30.",
+        ma5, ma12, ma30
+      };
+    }
+
+    if (difference < -0.01 || current < ma30) {
+      return {
+        value: -0.5,
+        reason:
+          "MM5 est inférieure à MM12 de plus de 1 %, " +
+          "ou le prix est inférieur à MM30.",
+        ma5, ma12, ma30
+      };
+    }
+
+    return {
+      value: 0,
+      reason:
+        "Aucune condition d'achat ou de vente n'est remplie.",
+      ma5, ma12, ma30
+    };
+  }
+
+  function actionName(signal) {
+    if (signal > 0) return "BUY";
+    if (signal < 0) return "SELL";
+    return "HOLD";
+  }
+
+  function signalChip(signal) {
+    const type =
+      signal > 0 ? "buy" :
+      signal < 0 ? "sell" : "hold";
+
+    return (
+      '<span class="chip ' + type + '">' +
+      actionName(signal) + " " +
+      (signal > 0 ? "+" : "") +
+      fmt(signal, 2) +
+      "</span>"
+    );
+  }
+
+  function pricesFor(product) {
+    return market.history
+      .map(row => row[product])
+      .filter(value =>
+        value !== null &&
+        value !== undefined &&
+        value !== "" &&
+        Number.isFinite(Number(value))
+      )
+      .map(Number);
+  }
+
+  function returns(prices) {
+    const result = [];
+
+    for (let i = 1; i < prices.length; i++) {
+      if (prices[i - 1] > 0) {
+        result.push(
+          (prices[i] / prices[i - 1] - 1) * 100
+        );
+      }
+    }
+
+    return result;
+  }
+
+  function volatility(prices) {
+    const values = returns(prices.slice(-31));
+
+    if (values.length < 2) return null;
+
+    const avg = mean(values);
+
+    return Math.sqrt(
+      mean(values.map(value =>
+        Math.pow(value - avg, 2)
+      ))
+    );
+  }
+
+  function maximumDrawdown(prices) {
+    if (!prices.length) return null;
+
+    let peak = prices[0];
+    let worst = 0;
+
+    for (const price of prices) {
+      peak = Math.max(peak, price);
+
+      if (peak > 0) {
+        worst = Math.max(
+          worst,
+          (peak - price) / peak * 100
+        );
+      }
+    }
+
+    return worst;
+  }
+
+  function change30(prices) {
+    if (
+      prices.length < 31 ||
+      prices[prices.length - 31] <= 0
+    ) {
+      return null;
+    }
+
+    return (
+      prices[prices.length - 1] /
+      prices[prices.length - 31] - 1
+    ) * 100;
+  }
+
+  // MAIN KPI CARDS
+
+  function updateKPIs() {
+    $("observations").textContent =
+      market.history.length;
+
+    $("productsCount").textContent =
+      market.products.length;
+
+    const signals = market.products.map(product =>
+      computeSignal(pricesFor(product)).value
+    );
+
+    $("buyCount").textContent =
+      signals.filter(signal => signal > 0).length;
+
+    $("sellCount").textContent =
+      signals.filter(signal => signal < 0).length;
+  }
+
+  // PRODUCT CARDS
+
+  function renderProducts() {
+    const container = $("productCards");
+    container.replaceChildren();
+
+    for (const product of market.products) {
+      const prices = pricesFor(product);
+      const price = prices[prices.length - 1];
+      const signal = computeSignal(prices).value;
+      const variation = change30(prices);
+      const risk = volatility(prices);
+
+      const card = document.createElement("article");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="product-top">
+          <span class="product-name">
+            Produit ${product}
+          </span>
+          ${signalChip(signal)}
+        </div>
+
+        <div class="price">${fmt(price, 4)}</div>
+
+        <div class="card-note">
+          Dernier prix observé
+        </div>
+
+        <div class="product-meta">
+          <div>
+            <span class="meta-label">
+              Variation 30 périodes
+            </span>
+            <span class="meta-value ${
+              variation === null ? "" :
+              variation >= 0 ? "positive" : "negative"
+            }">
+              ${percent(variation)}
+            </span>
+          </div>
+
+          <div>
+            <span class="meta-label">
+              Volatilité récente
+            </span>
+            <span class="meta-value">
+              ${risk === null ? "—" : fmt(risk) + " %"}
+            </span>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    }
+  }
+
+  function chartOptions() {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: "index",
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: COLORS.ink,
+          padding: 12
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            color: "#92988f",
+            maxTicksLimit: 8
+          }
+        },
+        y: {
+          border: {
+            display: false
+          },
+          grid: {
+            color: COLORS.grid
+          },
+          ticks: {
+            color: "#92988f"
+          }
+        }
+      }
+    };
+  }
+
+  // PRICE CHART
+
+  function renderPriceChart() {
+    if (!market) return;
+
+    const prices = pricesFor(selectedProduct);
+    const start = selectedRange === "all"
+      ? 0
+      : Math.max(
+          0,
+          prices.length - Number(selectedRange)
+        );
+
+    const labels = prices
+      .slice(start)
+      .map((_, index) => start + index + 1);
+
+    const datasets = [
+      {
+        label: "Prix",
+        data: prices.slice(start),
+        borderColor: COLORS.ink,
+        borderWidth: 2.5
+      },
+      {
+        label: "MM5",
+        data: movingAverage(prices, 5).slice(start),
+        borderColor: COLORS.sage,
+        borderWidth: 2
+      },
+      {
+        label: "MM12",
+        data: movingAverage(prices, 12).slice(start),
+        borderColor: COLORS.terra,
+        borderWidth: 2
+      },
+      {
+        label: "MM30",
+        data: movingAverage(prices, 30).slice(start),
+        borderColor: COLORS.gold,
+        borderWidth: 2,
+        borderDash: [6, 4]
+      }
+    ];
+
+    datasets.forEach(dataset => {
+      dataset.pointRadius = 0;
+      dataset.tension = 0.2;
+      dataset.spanGaps = false;
+    });
+
+    if (priceChart) priceChart.destroy();
+
+    priceChart = new Chart($("priceChart"), {
+      type: "line",
+      data: {
+        labels,
+        datasets
+      },
+      options: chartOptions()
+    });
+
+    document.querySelectorAll("[data-product]")
+      .forEach(button => {
+        button.classList.toggle(
+          "active",
+          button.dataset.product === selectedProduct
+        );
+      });
+
+    document.querySelectorAll("[data-range]")
+      .forEach(button => {
+        button.classList.toggle(
+          "active",
+          button.dataset.range === selectedRange
+        );
+      });
+  }
+
+  // SIGNAL EXPLANATIONS
+
+  function renderSignals() {
+    const container = $("signalDetails");
+    container.replaceChildren();
+
+    for (const product of market.products) {
+      const result = computeSignal(
+        pricesFor(product)
+      );
+
+      const item = document.createElement("div");
+      item.className = "signal-item";
+
+      item.innerHTML = `
+        <div class="signal-header">
+          <strong>Produit ${product}</strong>
+          ${signalChip(result.value)}
+        </div>
+
+        <p>${result.reason}</p>
+
+        <div class="averages">
+          <div class="average-box">
+            <small>MM5</small>
+            <strong>${fmt(result.ma5, 4)}</strong>
+          </div>
+          <div class="average-box">
+            <small>MM12</small>
+            <strong>${fmt(result.ma12, 4)}</strong>
+          </div>
+          <div class="average-box">
+            <small>MM30</small>
+            <strong>${fmt(result.ma30, 4)}</strong>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(item);
+    }
+  }
+
+  // RISK CHARTS
+
+  function renderRiskCharts() {
+    const products = market.products;
+
+    const changes = products.map(product =>
+      change30(pricesFor(product))
+    );
+
+    const drawdowns = products.map(product =>
+      maximumDrawdown(pricesFor(product))
+    );
+
+    const options1 = chartOptions();
+    options1.indexAxis = "y";
+    options1.scales.x.beginAtZero = true;
+
+    if (changeChart) changeChart.destroy();
+
+    changeChart = new Chart($("changeChart"), {
+      type: "bar",
+      data: {
+        labels: products.map(p => "Produit " + p),
+        datasets: [{
+          data: changes,
+          backgroundColor: changes.map(value =>
+            value === null ? "#d8ddd5" :
+            value >= 0 ? COLORS.sage : COLORS.terra
+          ),
+          borderRadius: 6,
+          barThickness: 25
+        }]
+      },
+      options: options1
+    });
+
+    const options2 = chartOptions();
+    options2.indexAxis = "y";
+    options2.scales.x.beginAtZero = true;
+
+    if (drawdownChart) drawdownChart.destroy();
+
+    drawdownChart = new Chart($("drawdownChart"), {
+      type: "bar",
+      data: {
+        labels: products.map(p => "Produit " + p),
+        datasets: [{
+          data: drawdowns,
+          backgroundColor: COLORS.terra,
+          borderRadius: 6,
+          barThickness: 25
+        }]
+      },
+      options: options2
+    });
+
+    const details = products.map(product => {
+      const value = volatility(
+        pricesFor(product)
+      );
+
+      return "Produit " + product + " : " +
+        (value === null ? "indisponible" :
+          fmt(value) + " %");
+    });
+
+    $("volatilityInfo").textContent =
+      "Volatilité des variations récentes : " +
+      details.join(" · ") +
+      ". Calcul fondé sur l'écart-type des " +
+      "rendements des 30 dernières variations, " +
+      "sans annualisation.";
+  }
+
+  // HISTORICAL SIGNALS
+
+  function renderHistory() {
+    const tbody = $("signalHistory");
+    tbody.replaceChildren();
+
+    const history = market.history;
+
+    for (
+      let period = history.length;
+      period > Math.max(0, history.length - 12);
+      period--
+    ) {
+      const tr = document.createElement("tr");
+
+      const indexCell = document.createElement("td");
+      indexCell.textContent = period;
+      tr.appendChild(indexCell);
+
+      for (const product of market.products) {
+        const prices = history
+          .slice(0, period)
+          .map(row => row[product])
+          .filter(value =>
+            value !== null &&
+            value !== undefined &&
+            Number.isFinite(Number(value))
+          )
+          .map(Number);
+
+        const signal = computeSignal(prices).value;
+
+        const td = document.createElement("td");
+        td.innerHTML = signalChip(signal);
+        tr.appendChild(td);
+      }
+
+      tbody.appendChild(tr);
+    }
+  }
+
+  // LOAD DATA
+
+  async function loadDashboard() {
+    const status = $("status");
+    const button = $("refresh");
+
+    button.disabled = true;
+    status.classList.remove("error");
+    status.textContent = "Chargement du marché ENSIM...";
+
+    try {
+      if (typeof Chart === "undefined") {
+        throw new Error(
+          "Chart.js n'est pas disponible."
+        );
+      }
+
+      const response = await fetch(
+        MARKET_URL,
+        { cache: "no-store" }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          "Impossible de charger le marché : HTTP " +
+          response.status
+        );
+      }
+
+      const data = await response.json();
+
+      if (
+        !Array.isArray(data.history) ||
+        !Array.isArray(data.products) ||
+        data.history.length === 0
+      ) {
+        throw new Error(
+          "Format de données du marché invalide."
+        );
+      }
+
+      const products = data.products.filter(
+        p => ["A", "B", "C"].includes(p)
+      );
+
+      if (products.length !== 3) {
+        throw new Error(
+          "Les produits A, B et C sont manquants."
+        );
+      }
+
+      market = {
+        history: data.history,
+        products
+      };
+
+      updateKPIs();
+      renderProducts();
+      renderPriceChart();
+      renderSignals();
+      renderRiskCharts();
+      renderHistory();
+
+      status.textContent =
+        "Données chargées avec succès · " +
+        new Date().toLocaleString("fr-FR");
+
+    } catch (error) {
+      console.error(error);
+
+      status.classList.add("error");
+      status.textContent =
+        "Erreur : " + error.message;
+
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  // INTERACTIVE CONTROLS
+
+  document.getElementById("refresh")
+    .addEventListener("click", loadDashboard);
+
+  document.querySelectorAll("[data-product]")
+    .forEach(button => {
+      button.addEventListener("click", () => {
+        selectedProduct = button.dataset.product;
+        renderPriceChart();
+      });
+    });
+
+  document.querySelectorAll("[data-range]")
+    .forEach(button => {
+      button.addEventListener("click", () => {
+        selectedRange = button.dataset.range;
+        renderPriceChart();
+      });
+    });
+
+  // INITIALIZATION
+
+  loadDashboard();
+</script>
+</body>
+</html>
