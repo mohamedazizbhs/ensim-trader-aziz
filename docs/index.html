@@ -758,6 +758,63 @@
 
     </section>
 
+<!-- HISTORICAL PERFORMANCE -->
+
+<section id="performance">
+
+  <div class="section-heading">
+    <div>
+      <h2>Performance historique</h2>
+      <p class="section-description">
+        Évolution de la valeur des portefeuilles
+        depuis le premier relevé enregistré.
+      </p>
+    </div>
+
+    <span class="badge" id="performance-count">
+      Historique
+    </span>
+  </div>
+
+  <article class="card">
+
+    <h3>Évolution des quatre traders</h3>
+
+    <div id="performance-chart"
+         class="chart-container">
+      Chargement de l'historique...
+    </div>
+
+    <div id="performance-legend"
+         class="chart-legend"></div>
+
+    <p class="note" id="performance-info"></p>
+
+  </article>
+
+  <article class="card" style="margin-top:20px">
+
+    <h3>Rendement depuis le premier relevé</h3>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Trader</th>
+            <th>Valeur initiale observée</th>
+            <th>Valeur actuelle</th>
+            <th>Évolution</th>
+          </tr>
+        </thead>
+
+        <tbody id="performance-table"></tbody>
+      </table>
+    </div>
+
+  </article>
+
+</section>
+
     <!-- MARKET -->
 
     <section id="market">
@@ -1584,6 +1641,232 @@
   // SECURED STRATEGY SIGNALS
   // ==================================================
 
+async function renderPerformance() {
+  const container = $("performance-chart");
+  const tbody = $("performance-table");
+  const legend = $("performance-legend");
+
+  const colors = {
+    aziz: "#34d4a3",
+    random_trader: "#4d91ff",
+    random_buyer: "#f6bf65",
+    random_seller: "#c49aff"
+  };
+
+  try {
+    const data = await fetchJSON(
+      "./data/portfolio_history.json"
+    );
+
+    const snapshots = data.snapshots || [];
+
+    $("performance-count").textContent =
+      snapshots.length + " relevé(s)";
+
+    if (snapshots.length < 2) {
+      container.textContent =
+        "Un deuxième relevé est nécessaire pour " +
+        "afficher l'évolution des portefeuilles.";
+
+      $("performance-info").textContent =
+        "L'historique commence au premier relevé " +
+        "enregistré. Aucun rendement antérieur " +
+        "n'est supposé.";
+
+      tbody.replaceChildren();
+      legend.replaceChildren();
+      return;
+    }
+
+    const ids = [
+      "aziz",
+      "random_trader",
+      "random_buyer",
+      "random_seller"
+    ];
+
+    const names = {
+      aziz: "Mon trader",
+      random_trader: "Random Trader",
+      random_buyer: "Random Buyer",
+      random_seller: "Random Seller"
+    };
+
+    const series = ids.map(id => ({
+      id,
+      name: names[id],
+      color: colors[id],
+      values: snapshots.map(snapshot => {
+        const trader = snapshot.comparison.find(
+          t => t.trader_id === id
+        );
+
+        return trader
+          ? Number(trader.total_value)
+          : null;
+      })
+    }));
+
+    const validValues = series
+      .flatMap(s => s.values)
+      .filter(Number.isFinite);
+
+    if (validValues.length === 0) {
+      throw new Error("Aucune valeur historique.");
+    }
+
+    const W = 950;
+    const H = 360;
+    const L = 90;
+    const R = 25;
+    const T = 25;
+    const B = 45;
+
+    let min = Math.min(...validValues);
+    let max = Math.max(...validValues);
+
+    if (min === max) {
+      min -= 1;
+      max += 1;
+    }
+
+    const padding = (max - min) * 0.10;
+    min -= padding;
+    max += padding;
+
+    const x = index =>
+      L + (W - L - R) *
+      index / (snapshots.length - 1);
+
+    const y = value =>
+      T + (H - T - B) *
+      (max - value) / (max - min);
+
+    const NS = "http://www.w3.org/2000/svg";
+
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+
+    // Horizontal grid and value labels
+    for (let i = 0; i <= 4; i++) {
+      const yy = T + i * (H - T - B) / 4;
+
+      const line = document.createElementNS(NS, "line");
+      line.setAttribute("x1", L);
+      line.setAttribute("x2", W - R);
+      line.setAttribute("y1", yy);
+      line.setAttribute("y2", yy);
+      line.setAttribute("stroke", "#344765");
+
+      svg.appendChild(line);
+
+      const label = document.createElementNS(NS, "text");
+      label.setAttribute("x", 5);
+      label.setAttribute("y", yy + 5);
+      label.setAttribute("fill", "#afc0d9");
+      label.setAttribute("font-size", 14);
+
+      label.textContent = (
+        max - i * (max - min) / 4
+      ).toFixed(0);
+
+      svg.appendChild(label);
+    }
+
+    // One line for each trader
+    for (const trader of series) {
+      let d = "";
+      let started = false;
+
+      trader.values.forEach((value, index) => {
+        if (!Number.isFinite(value)) {
+          started = false;
+          return;
+        }
+
+        d += (started ? " L " : " M ") +
+          x(index).toFixed(2) + " " +
+          y(value).toFixed(2);
+
+        started = true;
+      });
+
+      const path = document.createElementNS(NS, "path");
+      path.setAttribute("d", d);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", trader.color);
+      path.setAttribute("stroke-width", "3");
+      path.setAttribute("stroke-linejoin", "round");
+
+      svg.appendChild(path);
+    }
+
+    container.replaceChildren(svg);
+
+    // Legend
+    legend.replaceChildren();
+
+    for (const trader of series) {
+      const item = document.createElement("span");
+      const line = document.createElement("i");
+
+      line.style.background = trader.color;
+
+      item.append(line, document.createTextNode(trader.name));
+      legend.appendChild(item);
+    }
+
+    // Return table
+    tbody.replaceChildren();
+
+    for (const trader of series) {
+      const first = trader.values[0];
+      const last = trader.values.at(-1);
+
+      const hasReturn =
+        Number.isFinite(first) &&
+        Number.isFinite(last) &&
+        first > 0;
+
+      const performance = hasReturn
+        ? (last / first - 1)
+        : null;
+
+      const tr = document.createElement("tr");
+
+      const cells = [
+        trader.name,
+        Number.isFinite(first) ? formatNumber(first) : "—",
+        Number.isFinite(last) ? formatNumber(last) : "—",
+        performance === null
+          ? "—"
+          : formatPercent(performance)
+      ];
+
+      for (const value of cells) {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
+      }
+
+      tbody.appendChild(tr);
+    }
+
+    $("performance-info").textContent =
+      "Période observée : " +
+      new Date(snapshots[0].timestamp)
+        .toLocaleString("fr-FR") +
+      " au " +
+      new Date(snapshots.at(-1).timestamp)
+        .toLocaleString("fr-FR") +
+      ". Rendements calculés uniquement sur cette période.";
+
+  } catch (error) {
+    container.textContent =
+      "Historique indisponible : " + error.message;
+  }
+}
+
   function renderSignals() {
     const container = $("signals");
 
@@ -1839,7 +2122,7 @@
       drawChart();
 
       await renderComparison();
-
+      await renderPerformance();
       status.textContent = "● Données chargées";
 
     } catch (error) {
