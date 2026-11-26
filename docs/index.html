@@ -804,6 +804,7 @@
             <th>Valeur initiale observée</th>
             <th>Valeur actuelle</th>
             <th>Évolution</th>
+            <th>Drawdown max.</th>
           </tr>
         </thead>
 
@@ -1834,14 +1835,23 @@ async function renderPerformance() {
 
       const tr = document.createElement("tr");
 
-      const cells = [
-        trader.name,
-        Number.isFinite(first) ? formatNumber(first) : "—",
-        Number.isFinite(last) ? formatNumber(last) : "—",
-        performance === null
-          ? "—"
-          : formatPercent(performance)
-      ];
+      
+const drawdown = calculateMaxDrawdown(
+  trader.values
+);
+
+const cells = [
+  trader.name,
+  Number.isFinite(first) ? formatNumber(first) : "—",
+  Number.isFinite(last) ? formatNumber(last) : "—",
+  performance === null
+    ? "—"
+    : formatPercent(performance),
+  trader.values.filter(Number.isFinite).length >= 2
+    ? formatPercent(drawdown)
+    : "—"
+];
+
 
       for (const value of cells) {
         const td = document.createElement("td");
@@ -2063,6 +2073,28 @@ async function renderPerformance() {
       formatPercent(totalChange);
   }
 
+
+function calculateMaxDrawdown(values) {
+  let peak = -Infinity;
+  let maxDrawdown = 0;
+
+  for (const value of values) {
+    if (!Number.isFinite(value) || value <= 0) {
+      continue;
+    }
+
+    peak = Math.max(peak, value);
+
+    const drawdown = (peak - value) / peak;
+
+    maxDrawdown = Math.max(
+      maxDrawdown,
+      drawdown
+    );
+  }
+
+  return maxDrawdown;
+}
 
   // ==================================================
   // PRODUCT SELECTION
