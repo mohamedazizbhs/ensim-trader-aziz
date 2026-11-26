@@ -2,2201 +2,1680 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ENSIM Trader | Trading Overview</title>
-
-  <style>
-    :root {
-      --bg: #0b1220;
-      --sidebar: #101a2d;
-      --card: #162238;
-      --card-light: #1b2b45;
-      --border: #2b405d;
-      --text: #f0f5ff;
-      --muted: #afc0d9;
-      --blue: #4d91ff;
-      --green: #34d4a3;
-      --red: #ff8294;
-      --yellow: #f6bf65;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Segoe UI", Arial, sans-serif;
-      font-size: 17px;
-      line-height: 1.6;
-    }
-
-    button {
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .app {
-      display: grid;
-      grid-template-columns: 270px minmax(0, 1fr);
-      min-height: 100vh;
-    }
-
-    /* SIDEBAR */
-
-    .sidebar {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      padding: 30px 20px;
-      background: var(--sidebar);
-      border-right: 1px solid var(--border);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 55px;
-    }
-
-    .brand-icon {
-      display: grid;
-      place-items: center;
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      background: var(--blue);
-      font-size: 25px;
-      font-weight: 800;
-    }
-
-    .brand-name {
-      font-size: 19px;
-      font-weight: 800;
-    }
-
-    .brand-sub {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .nav-title {
-      margin-bottom: 15px;
-      color: #8faeec;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    .sidebar nav {
-      display: grid;
-      gap: 9px;
-    }
-
-    .sidebar nav a {
-      display: block;
-      padding: 14px 16px;
-      border-radius: 12px;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 650;
-    }
-
-    .sidebar nav a:hover,
-    .sidebar nav a.active {
-      background: #22375a;
-      color: white;
-    }
-
-    /* MAIN LAYOUT */
-
-    main {
-      min-width: 0;
-      padding: 42px clamp(22px, 3.5vw, 65px) 80px;
-      width: 100%;
-      max-width: 1800px;
-      margin: auto;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .eyebrow {
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: #69bbff;
-    }
-
-    h1 {
-      margin: 8px 0;
-      font-size: clamp(32px, 3vw, 44px);
-      line-height: 1.2;
-    }
-
-    .subtitle {
-      margin: 0;
-      color: var(--muted);
-      font-size: 18px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .status {
-      padding: 12px 15px;
-      border-radius: 11px;
-      background: #14392f;
-      color: var(--green);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .status.error {
-      background: #42202c;
-      color: var(--red);
-    }
-
-    .refresh-btn {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 11px;
-      background: var(--blue);
-      color: white;
-      font-weight: 750;
-    }
-
-    .notice {
-      margin-bottom: 34px;
-      padding: 20px 24px;
-      border: 1px solid #365782;
-      border-radius: 14px;
-      background: #142945;
-      color: #cbdcf6;
-      font-size: 16px;
-    }
-
-    /* SECTIONS */
-
-    section {
-      margin-top: 38px;
-      scroll-margin-top: 25px;
-    }
-
-    .section-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: 27px;
-      letter-spacing: -0.5px;
-    }
-
-    h3 {
-      margin: 0 0 15px;
-      font-size: 21px;
-    }
-
-    .section-description {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 16px;
-    }
-
-    .grid {
-      display: grid;
-      gap: 20px;
-    }
-
-    .kpi-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .two-columns {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .card {
-      min-width: 0;
-      padding: 26px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: var(--card);
-    }
-
-    .kpi-label {
-      color: var(--muted);
-      font-size: 15px;
-      font-weight: 650;
-    }
-
-    .kpi-value {
-      margin: 12px 0 6px;
-      font-size: clamp(25px, 2.3vw, 36px);
-      font-weight: 800;
-      line-height: 1.2;
-    }
-
-    .kpi-detail,
-    .note {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 11px;
-      border-radius: 9px;
-      background: #293b59;
-      color: #dceaff;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .badge.buy {
-      background: #164536;
-      color: var(--green);
-    }
-
-    .badge.sell {
-      background: #4a2633;
-      color: var(--red);
-    }
-
-    .badge.hold {
-      background: #263954;
-      color: #b9c8de;
-    }
-
-    /* PORTFOLIO */
-
-    .allocation {
-      display: flex;
-      height: 18px;
-      margin: 25px 0;
-      overflow: hidden;
-      border-radius: 30px;
-      background: #293a54;
-    }
-
-    .allocation-segment {
-      height: 100%;
-    }
-
-    .legend {
-      display: grid;
-      gap: 13px;
-    }
-
-    .legend-row,
-    .position-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      font-size: 16px;
-    }
-
-    .legend-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .position-row {
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    /* TRADER COMPARISON */
-
-    .comparison-item {
-      margin-bottom: 26px;
-    }
-
-    .comparison-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 9px;
-      font-size: 17px;
-      font-weight: 750;
-    }
-
-    .comparison-track {
-      width: 100%;
-      height: 18px;
-      overflow: hidden;
-      border-radius: 30px;
-      background: #293953;
-    }
-
-    .comparison-fill {
-      height: 100%;
-      border-radius: 30px;
-      background: var(--blue);
-    }
-
-    .comparison-fill.mine {
-      background: var(--green);
-    }
-
-    .comparison-detail {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* MARKET CHART */
-
-    .product-buttons {
-      display: flex;
-      gap: 9px;
-    }
-
-    .product-buttons button {
-      padding: 9px 18px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--card-light);
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    .product-buttons button.active {
-      background: var(--blue);
-      color: white;
-    }
-
-    .chart-container {
-      margin-top: 22px;
-      width: 100%;
-    }
-
-    .chart-container svg {
-      display: block;
-      width: 100%;
-      height: 350px;
-    }
-
-    .chart-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 22px;
-      margin-top: 15px;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .chart-legend i {
-      display: inline-block;
-      width: 22px;
-      height: 4px;
-      margin-right: 7px;
-      vertical-align: middle;
-    }
-
-    /* TABLES */
-
-    .table-scroll {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 16px;
-    }
-
-    th {
-      padding: 15px 12px;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 13px;
-      text-align: left;
-      text-transform: uppercase;
-    }
-
-    td {
-      padding: 17px 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    /* STRATEGY */
-
-    .signal-row {
-      display: grid;
-      grid-template-columns: 60px 90px 1fr auto;
-      align-items: center;
-      gap: 12px;
-      padding: 15px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .signal-row small {
-      color: var(--muted);
-    }
-
-    .strategy-rule {
-      margin-bottom: 18px;
-      font-size: 16px;
-    }
-
-    /* RISK */
-
-    .risk-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .risk-tile {
-      padding: 20px;
-      border-radius: 13px;
-      background: var(--card-light);
-    }
-
-    .risk-tile span {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .risk-tile strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 27px;
-    }
-
-    footer {
-      margin-top: 45px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* RESPONSIVE */
-
-    @media (max-width: 1200px) {
-      .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .two-columns {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 800px) {
-      .app {
-        display: block;
-      }
-
-      .sidebar {
-        position: static;
-        height: auto;
-        padding: 20px;
-      }
-
-      .brand {
-        margin-bottom: 20px;
-      }
-
-      .nav-title {
-        display: none;
-      }
-
-      .sidebar nav {
-        display: flex;
-        overflow-x: auto;
-      }
-
-      .sidebar nav a {
-        white-space: nowrap;
-      }
-
-      main {
-        padding: 28px 17px 60px;
-      }
-
-      .kpi-grid,
-      .two-columns,
-      .risk-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .card {
-        padding: 21px;
-      }
-
-      .signal-row {
-        grid-template-columns: 45px 75px 1fr;
-      }
-
-      .signal-row small {
-        grid-column: 2 / -1;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080a12">
+<title>ENSIM | Trade Terminal</title>
+
+<style>
+:root {
+  --bg:#080a12;
+  --side:#0c0d19;
+  --panel:#111323;
+  --panel2:#171a2e;
+  --border:#303149;
+  --text:#f1f1fc;
+  --muted:#a2a3bb;
+  --purple:#9778ff;
+  --purple2:#6548d2;
+  --teal:#2bd8b7;
+  --red:#ff6d8e;
+  --amber:#ffca78;
+  --shadow:0 12px 45px #0005;
+}
+
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  font-size:17px;
+  line-height:1.55;
+}
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    linear-gradient(#846bff08 1px,transparent 1px),
+    linear-gradient(90deg,#846bff08 1px,transparent 1px),
+    radial-gradient(circle at 85% 10%,#6342ab1c,transparent 36%),
+    radial-gradient(circle at 8% 85%,#087d7511,transparent 35%);
+  background-size:48px 48px,48px 48px,auto,auto;
+}
+a { color:inherit; text-decoration:none; }
+button { font:inherit; cursor:pointer; }
+button:focus-visible,a:focus-visible {
+  outline:2px solid var(--purple);
+  outline-offset:3px;
+}
+button:disabled { opacity:.5;cursor:not-allowed; }
+.app {
+  display:grid;
+  grid-template-columns:265px minmax(0,1fr);
+  min-height:100vh;
+}
+
+/* NAVIGATION */
+.sidebar {
+  position:sticky;
+  top:0;
+  height:100vh;
+  background:#0c0d19f2;
+  border-right:1px solid #302c49;
+  padding:29px 18px;
+  display:flex;
+  flex-direction:column;
+  z-index:5;
+}
+.logo {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:0 8px;
+  margin-bottom:55px;
+}
+.logo-icon {
+  width:51px;
+  height:51px;
+  border:1px solid #a18bff;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  color:#c9baff;
+  background:linear-gradient(145deg,#3b2c6a,#141329);
+  box-shadow:0 0 22px #8165ff25;
+  font-size:26px;
+  font-weight:900;
+}
+.logo strong { display:block;font-size:19px;letter-spacing:.4px; }
+.logo small { display:block;color:var(--muted);font-size:11px;letter-spacing:1.4px; }
+.nav-caption {
+  color:#797b9d;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2px;
+  padding:0 16px;
+  margin-bottom:14px;
+}
+nav { display:grid;gap:7px; }
+nav a {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:14px 16px;
+  border-radius:12px;
+  color:#a4a4bd;
+  font-weight:650;
+  font-size:16px;
+  transition:.2s;
+}
+nav a:hover,nav a.active {
+  color:#f7f4ff;
+  background:linear-gradient(90deg,#4b397d80,#25203945);
+  box-shadow:inset 3px 0 var(--purple);
+}
+.nav-icon { width:21px;text-align:center;color:#ae92ff; }
+.side-bottom {
+  margin-top:auto;
+  padding:18px 14px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:#161629;
+}
+.side-bottom strong { display:block;font-size:14px; }
+.side-bottom small { color:var(--muted);font-size:12px; }
+
+/* CONTENT */
+main {
+  width:100%;
+  min-width:0;
+  max-width:1760px;
+  margin:auto;
+  padding:40px clamp(20px,3.5vw,64px) 65px;
+}
+.hero {
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+  padding:31px;
+  border:1px solid #493c70;
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 90% 40%,#7b4edd26,transparent 40%),
+    linear-gradient(120deg,#191629,#111321);
+  box-shadow:var(--shadow);
+}
+.hero::after {
+  content:"";
+  position:absolute;
+  right:-35px;
+  top:-100px;
+  width:250px;
+  height:250px;
+  border:1px solid #a58bff26;
+  border-radius:50%;
+  box-shadow:0 0 0 35px #a58bff09,0 0 0 75px #a58bff05;
+  pointer-events:none;
+}
+.eyebrow {
+  color:#b09cff;
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:2.3px;
+}
+h1 { margin:8px 0;font-size:clamp(34px,3vw,49px);line-height:1.15; }
+.hero p { color:#b6b4cb;font-size:17px;margin:8px 0 0; }
+.hero-actions { display:flex;align-items:center;gap:12px;z-index:1;flex-wrap:wrap; }
+.connection {
+  color:var(--teal);
+  font-size:14px;
+  font-weight:800;
+  padding:11px 15px;
+  border:1px solid #246e66;
+  border-radius:10px;
+  background:#112923;
+}
+.connection.error { color:var(--red);border-color:#6c3044;background:#2c1720; }
+.refresh {
+  color:#fff;
+  background:linear-gradient(130deg,#7754e8,#5034b1);
+  border:1px solid #9d84ff;
+  border-radius:11px;
+  padding:12px 19px;
+  font-weight:800;
+  box-shadow:0 5px 22px #7955ff35;
+  transition:.2s;
+}
+.refresh:hover { transform:translateY(-2px);filter:brightness(1.15); }
+
+.notice {
+  margin:24px 0 33px;
+  padding:17px 21px;
+  border:1px solid #5c466a;
+  border-radius:13px;
+  color:#d6cde3;
+  background:#211a2c;
+  font-size:15px;
+}
+section { margin-top:39px;scroll-margin-top:24px; }
+.section-head {
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:15px;
+  margin-bottom:20px;
+}
+.section-tag {
+  font-size:12px;
+  letter-spacing:2px;
+  color:var(--purple);
+  font-weight:850;
+}
+h2 { margin:4px 0 3px;font-size:28px;letter-spacing:-.5px; }
+h3 { margin:0 0 14px;font-size:21px; }
+.desc { font-size:16px;color:var(--muted);margin:4px 0; }
+.pill {
+  display:inline-block;
+  color:#c5b7ff;
+  background:#2b2543;
+  border:1px solid #52416e;
+  border-radius:99px;
+  padding:7px 13px;
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:.4px;
+}
+.grid { display:grid;gap:19px; }
+.kpis { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.card {
+  min-width:0;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(155deg,#17182b,#101320);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:25px;
+  box-shadow:var(--shadow);
+}
+.card::before {
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,#a18bff65,transparent);
+}
+.card:hover { border-color:#514768;transition:border-color .2s; }
+.kpi-label { color:#b1aec8;font-size:15px;font-weight:700; }
+.kpi-value {
+  font-size:clamp(24px,2.2vw,36px);
+  font-weight:850;
+  margin:13px 0 7px;
+  letter-spacing:-.8px;
+  font-variant-numeric:tabular-nums;
+}
+.kpi-sub { color:#8e8faa;font-size:13px; }
+.accent { color:var(--purple); }
+.good { color:var(--teal); }
+.bad { color:var(--red); }
+.warning { color:var(--amber); }
+.note { font-size:14px;color:var(--muted);margin-top:17px; }
+.stack { margin-top:19px; }
+.alloc-bar {
+  display:flex;
+  overflow:hidden;
+  height:17px;
+  border-radius:99px;
+  background:#2b2d44;
+  margin:24px 0 20px;
+}
+.alloc-bar div { height:100%; }
+.legend-item,.position-item {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 0;
+  border-bottom:1px solid #303047;
+}
+.legend-left { display:flex;align-items:center;gap:11px; }
+.dot { width:11px;height:11px;border-radius:50%;flex-shrink:0; }
+
+/* COMPARISON */
+.compare-item { margin-bottom:25px; }
+.compare-top { display:flex;justify-content:space-between;gap:10px;font-weight:750; }
+.track { height:15px;border-radius:99px;background:#2a2b40;overflow:hidden;margin-top:10px; }
+.fill { height:100%;background:linear-gradient(90deg,#4d397f,#9978ff);border-radius:99px; }
+.fill.mine { background:linear-gradient(90deg,#126c65,#2bd8b7); }
+.compare-meta { font-size:13px;color:var(--muted);margin-top:7px; }
+.compare-grid { display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,1fr);gap:19px; }
+
+/* CHARTS */
+.chart { width:100%;min-height:340px;position:relative; }
+.chart svg { display:block;width:100%;height:auto;max-height:400px; }
+.chart-legend {
+  display:flex;
+  flex-wrap:wrap;
+  gap:15px;
+  margin-top:15px;
+  color:var(--muted);
+  font-size:14px;
+}
+.line-key { display:inline-block;width:19px;height:4px;vertical-align:middle;margin-right:7px;border-radius:4px; }
+.chart-empty {
+  display:grid;
+  place-items:center;
+  min-height:220px;
+  border:1px dashed #45415c;
+  border-radius:12px;
+  color:var(--muted);
+  padding:24px;
+  text-align:center;
+}
+.buttons { display:flex;gap:8px; }
+.buttons button {
+  background:#22223b;
+  color:#aeacc8;
+  border:1px solid #45415f;
+  border-radius:9px;
+  padding:9px 17px;
+  font-weight:800;
+}
+.buttons button.active {
+  background:var(--purple2);
+  border-color:#ad94ff;
+  color:white;
+  box-shadow:0 0 20px #7755e744;
+}
+
+/* TABLES */
+.table-wrap { overflow-x:auto; }
+table { width:100%;border-collapse:collapse;font-size:15px; }
+th {
+  color:#9f9bb9;
+  text-transform:uppercase;
+  font-size:12px;
+  letter-spacing:.5px;
+  text-align:left;
+  padding:14px 12px;
+  border-bottom:1px solid #3a3851;
+  white-space:nowrap;
+}
+td {
+  padding:15px 12px;
+  border-bottom:1px solid #292d41;
+  font-variant-numeric:tabular-nums;
+}
+tbody tr:hover { background:#ffffff06; }
+.right { text-align:right; }
+.signal {
+  display:inline-block;
+  border-radius:8px;
+  padding:5px 10px;
+  font-size:12px;
+  font-weight:850;
+}
+.signal.buy { color:var(--teal);background:#123c35;border:1px solid #246b58; }
+.signal.sell { color:var(--red);background:#3b1e2e;border:1px solid #6c3448; }
+.signal.hold { color:#b9abc9;background:#29243b;border:1px solid #4d4165; }
+.signal-item {
+  display:grid;
+  grid-template-columns:65px 90px 90px 1fr;
+  align-items:center;
+  gap:13px;
+  padding:15px 0;
+  border-bottom:1px solid #302d46;
+}
+.rule {
+  margin:15px 0;
+  padding:13px 15px;
+  background:#1a1a2e;
+  border:1px solid #33314c;
+  border-radius:11px;
+}
+.rule .signal { margin-right:9px; }
+.risk-tiles { display:grid;grid-template-columns:repeat(3,1fr);gap:12px; }
+.risk-tile {
+  padding:19px;
+  background:#1b1b32;
+  border-radius:12px;
+  border:1px solid #34334c;
+}
+.risk-tile span { display:block;font-size:13px;color:var(--muted); }
+.risk-tile strong { display:block;font-size:25px;margin-top:9px; }
+footer {
+  color:#8989a4;
+  font-size:13px;
+  padding:26px 0;
+  margin-top:50px;
+  border-top:1px solid var(--border);
+}
+@media(max-width:1250px) {
+  .kpis { grid-template-columns:repeat(2,1fr); }
+  .compare-grid { grid-template-columns:1fr; }
+}
+@media(max-width:980px) {
+  .app { display:block; }
+  .sidebar { position:static;height:auto;padding:16px; }
+  .logo { margin-bottom:15px; }
+  .nav-caption,.side-bottom { display:none; }
+  nav { display:flex;overflow-x:auto;gap:5px; }
+  nav a { white-space:nowrap;padding:10px 12px; }
+  main { padding:25px 18px; }
+}
+@media(max-width:650px) {
+  .kpis,.two,.risk-tiles { grid-template-columns:1fr; }
+  .hero { padding:23px; }
+  .card { padding:19px; }
+  h2 { font-size:24px; }
+  .signal-item { grid-template-columns:48px 75px 1fr; }
+  .signal-item small { grid-column:2 / -1; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after { transition:none!important;animation:none!important; }
+}
+</style>
 </head>
 
 <body>
-
 <div class="app">
 
-  <!-- SIDEBAR -->
-
-  <aside class="sidebar">
-
-    <div class="brand">
-      <div class="brand-icon">E.</div>
-      <div>
-        <div class="brand-name">ENSIM Trader</div>
-        <div class="brand-sub">
-          TRADE CENTER / ANALYTICS
-        </div>
-      </div>
-    </div>
-
-    <div class="nav-title">WORKSPACE</div>
-
-    <nav>
-      <a href="#overview" class="active">Vue d'ensemble</a>
-      <a href="#comparison">Comparaison</a>
-      <a href="#market">Marché</a>
-      <a href="#strategy">Stratégie</a>
-      <a href="#risk">Risques</a>
-    </nav>
-
-  </aside>
-
-  <!-- MAIN CONTENT -->
-
-  <main>
-
-    <header class="header" id="overview">
-
-      <div>
-        <div class="eyebrow">
-          ENSIM / BUSINESS INTELLIGENCE / TP2
-        </div>
-
-        <h1>Trading Overview</h1>
-
-        <p class="subtitle">
-          Analyse ton portefeuille, le marché et les
-          décisions de ton algorithme.
-        </p>
-      </div>
-
-      <div class="header-actions">
-        <span id="status" class="status">
-          Chargement...
-        </span>
-
-        <button id="refresh" class="refresh-btn">
-          ↻ Actualiser
-        </button>
-      </div>
-
-    </header>
-
-    <div class="notice">
-      <strong>Marché fictif ENSIM — Mode lecture seule.</strong>
-      Les positions proviennent du simulateur officiel.
-      Les signaux présentés sont des recommandations et
-      ne correspondent pas nécessairement aux ordres exécutés.
-    </div>
-
-    <!-- PORTFOLIO -->
-
-    <section id="portfolio">
-
-      <div class="section-heading">
-        <div>
-          <h2>Mon portefeuille</h2>
-          <p class="section-description">
-            Valeur actuelle de mes avoirs ENSIM.
-          </p>
-        </div>
-
-        <span class="badge" id="market-count">
-          — observations
-        </span>
-      </div>
-
-      <div class="grid kpi-grid">
-
-        <article class="card">
-          <div class="kpi-label">Valeur totale</div>
-          <div class="kpi-value" id="portfolio-total">—</div>
-          <div class="kpi-detail">
-            Liquidités et positions
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="kpi-label">Argent disponible</div>
-          <div class="kpi-value" id="portfolio-cash">—</div>
-          <div class="kpi-detail">
-            Solde officiel
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="kpi-label">Valeur des actifs</div>
-          <div class="kpi-value" id="portfolio-assets">—</div>
-          <div class="kpi-detail">
-            Produits A, B et C
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="kpi-label">Part des liquidités</div>
-          <div class="kpi-value" id="cash-share">—</div>
-          <div class="kpi-detail">
-            Pourcentage du portefeuille
-          </div>
-        </article>
-
-      </div>
-
-      <div class="grid two-columns" style="margin-top:20px">
-
-        <article class="card">
-
-          <h3>Répartition du portefeuille</h3>
-
-          <p class="note">
-            Calculée selon les derniers prix du marché.
-          </p>
-
-          <div class="allocation" id="allocation"></div>
-
-          <div class="legend" id="allocation-legend"></div>
-
-        </article>
-
-        <article class="card">
-
-          <h3>Mes positions</h3>
-
-          <div id="positions">
-            Chargement...
-          </div>
-
-        </article>
-
-      </div>
-
-    </section>
-
-    <!-- COMPARISON: CORRECTLY INSIDE MAIN -->
-
-    <section id="comparison">
-
-      <div class="section-heading">
-
-        <div>
-          <h2>Comparaison des traders</h2>
-          <p class="section-description">
-            Mon portefeuille face aux trois traders de référence.
-          </p>
-        </div>
-
-        <span class="badge">
-          Valeur actuelle
-        </span>
-
-      </div>
-
-      <article class="card">
-
-        <div id="comparison-bars">
-          Chargement des traders...
-        </div>
-
-        <p class="note" id="comparison-date"></p>
-
-        <p class="note">
-          Les données correspondent au dernier instantané publié.
-          Une valeur plus élevée ne prouve pas un meilleur rendement
-          historique.
-        </p>
-
-      </article>
-
-    </section>
-
-<!-- HISTORICAL PERFORMANCE -->
-
-<section id="performance">
-
-  <div class="section-heading">
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">E.</div>
     <div>
-      <h2>Performance historique</h2>
-      <p class="section-description">
-        Évolution de la valeur des portefeuilles
-        depuis le premier relevé enregistré.
-      </p>
+      <strong>ENSIM Trader</strong>
+      <small>TRADE TERMINAL / V2</small>
     </div>
-
-    <span class="badge" id="performance-count">
-      Historique
-    </span>
   </div>
 
-  <article class="card">
+  <div class="nav-caption">NAVIGATION</div>
+  <nav>
+    <a href="#overview" class="active"><span class="nav-icon">◈</span>Overview</a>
+    <a href="#portfolio"><span class="nav-icon">◉</span>Portefeuille</a>
+    <a href="#comparison"><span class="nav-icon">▤</span>Comparaison</a>
+    <a href="#performance"><span class="nav-icon">⌁</span>Performance</a>
+    <a href="#market"><span class="nav-icon">▥</span>Marché</a>
+    <a href="#strategy"><span class="nav-icon">◇</span>Stratégie</a>
+    <a href="#risk"><span class="nav-icon">△</span>Risques</a>
+  </nav>
 
-    <h3>Évolution des quatre traders</h3>
+  <div class="side-bottom">
+    <strong>ENSIM TRADE CENTER</strong>
+    <small>Business Intelligence · TP2</small>
+    <small>Simulation pédagogique</small>
+  </div>
+</aside>
 
-    <div id="performance-chart"
-         class="chart-container">
-      Chargement de l'historique...
+<main>
+
+  <header class="hero" id="overview">
+    <div>
+      <div class="eyebrow">ENSIM / MARKET INTELLIGENCE</div>
+      <h1>Trade Terminal<span class="accent">.</span></h1>
+      <p>Surveillance du marché, analyse des stratégies et performance.</p>
     </div>
-
-    <div id="performance-legend"
-         class="chart-legend"></div>
-
-    <p class="note" id="performance-info"></p>
-
-  </article>
-
-  <article class="card" style="margin-top:20px">
-
-    <h3>Rendement depuis le premier relevé</h3>
-
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th>Trader</th>
-            <th>Valeur initiale observée</th>
-            <th>Valeur actuelle</th>
-            <th>Évolution</th>
-            <th>Drawdown max.</th>
-          </tr>
-        </thead>
-
-        <tbody id="performance-table"></tbody>
-      </table>
+    <div class="hero-actions">
+      <div id="status" class="connection">● Connexion...</div>
+      <button id="refresh" class="refresh">↻ Actualiser</button>
     </div>
+  </header>
 
-  </article>
+  <div class="notice">
+    <strong>MODE ANALYSE —</strong>
+    Les données de portefeuille proviennent du simulateur ENSIM.
+    Les signaux BUY / SELL / HOLD sont calculés localement.
+    Aucun ordre n'est envoyé depuis ce dashboard.
+  </div>
 
-</section>
-
-    <!-- MARKET -->
-
-    <section id="market">
-
-      <div class="section-heading">
-
-        <div>
-          <h2>Marché et tendances</h2>
-          <p class="section-description">
-            Évolution des prix et analyse des moyennes mobiles.
-          </p>
-        </div>
-
-        <div class="product-buttons">
-          <button data-product="A" class="active">A</button>
-          <button data-product="B">B</button>
-          <button data-product="C">C</button>
-        </div>
-
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">01 / ASSETS</div>
+        <h2>Mon portefeuille</h2>
+        <p class="desc">Valorisation officielle selon les derniers prix du marché.</p>
       </div>
+      <span class="pill" id="observation-count">— observations</span>
+    </div>
+
+    <div class="grid kpis">
+      <article class="card">
+        <div class="kpi-label">Valeur totale</div>
+        <div class="kpi-value" id="total-value">—</div>
+        <div class="kpi-sub">Liquidités + actifs</div>
+      </article>
+      <article class="card">
+        <div class="kpi-label">Liquidités</div>
+        <div class="kpi-value" id="cash-value">—</div>
+        <div class="kpi-sub">Solde disponible</div>
+      </article>
+      <article class="card">
+        <div class="kpi-label">Valeur des actifs</div>
+        <div class="kpi-value" id="assets-value">—</div>
+        <div class="kpi-sub">Positions A / B / C</div>
+      </article>
+      <article class="card">
+        <div class="kpi-label">Part des liquidités</div>
+        <div class="kpi-value accent" id="cash-percent">—</div>
+        <div class="kpi-sub">Exposition actuelle</div>
+      </article>
+    </div>
+
+    <div class="grid two stack">
+      <article class="card">
+        <h3>Allocation des actifs</h3>
+        <p class="desc">Répartition de la valeur totale.</p>
+        <div id="allocation" class="alloc-bar"></div>
+        <div id="allocation-legend"></div>
+      </article>
+      <article class="card">
+        <h3>Positions détenues</h3>
+        <div id="positions">Chargement...</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section id="comparison">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">02 / BENCHMARK</div>
+        <h2>Comparaison des traders</h2>
+        <p class="desc">Valeur actuelle face aux trois références ENSIM.</p>
+      </div>
+      <span class="pill">SNAPSHOT</span>
+    </div>
+
+    <div class="compare-grid">
+      <article class="card">
+        <h3>Classement par valeur</h3>
+        <div id="comparison-bars">Chargement...</div>
+        <p id="comparison-date" class="note"></p>
+      </article>
+      <article class="card">
+        <h3>Lecture des résultats</h3>
+        <p class="desc">
+          Les valeurs tiennent compte des liquidités et des quantités
+          détenues, multipliées par les prix du dernier relevé.
+        </p>
+        <div class="rule">
+          <strong>Mon trader</strong> : positions du portefeuille Aziz.
+        </div>
+        <div class="rule">
+          <strong>Random Trader / Buyer / Seller</strong> :
+          portefeuilles de référence de l'organisateur.
+        </div>
+        <p class="note">
+          Ce classement n'est pas un classement de rendement.
+          L'instantané peut être moins récent que les prix live.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- PERFORMANCE -->
+  <section id="performance">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">03 / PERFORMANCE</div>
+        <h2>Performance historique</h2>
+        <p class="desc">Évolution des quatre portefeuilles depuis le premier relevé.</p>
+      </div>
+      <span class="pill" id="snapshot-count">— relevés</span>
+    </div>
+
+    <article class="card">
+      <h3>Évolution de la valeur</h3>
+      <div id="performance-chart" class="chart">
+        <div class="chart-empty">Chargement de l'historique...</div>
+      </div>
+      <div id="performance-legend" class="chart-legend"></div>
+      <p class="note" id="performance-period"></p>
+    </article>
+
+    <article class="card stack">
+      <h3>Rendement et risque par trader</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Trader</th>
+              <th class="right">Début</th>
+              <th class="right">Fin</th>
+              <th class="right">Rendement</th>
+              <th class="right">Drawdown max.</th>
+              <th class="right">Volatilité</th>
+            </tr>
+          </thead>
+          <tbody id="performance-table"></tbody>
+        </table>
+      </div>
+      <p class="note">
+        Rendement observé depuis le premier snapshot.
+        Volatilité des variations entre relevés, non annualisée.
+        Ces mesures ne reconstituent pas les transactions antérieures.
+      </p>
+    </article>
+  </section>
+
+  <!-- MARKET -->
+  <section id="market">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">04 / MARKET DATA</div>
+        <h2>Marché et tendances</h2>
+        <p class="desc">Analyse technique des produits A, B et C.</p>
+      </div>
+      <div class="buttons">
+        <button class="active" data-product="A">A</button>
+        <button data-product="B">B</button>
+        <button data-product="C">C</button>
+      </div>
+    </div>
+
+    <article class="card">
+      <h3 id="market-heading">Produit A — Évolution des prix</h3>
+      <p id="market-summary" class="desc">Chargement...</p>
+      <div id="market-chart" class="chart"></div>
+      <div class="chart-legend">
+        <span><i class="line-key" style="background:#aa8bff"></i>Prix</span>
+        <span><i class="line-key" style="background:#2bd8b7"></i>MM5</span>
+        <span><i class="line-key" style="background:#ffca78"></i>MM12</span>
+        <span><i class="line-key" style="background:#ff6d8e"></i>MM30</span>
+      </div>
+    </article>
+
+    <article class="card stack">
+      <h3>Indicateurs techniques</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th class="right">Prix</th>
+              <th class="right">MM5</th>
+              <th class="right">MM12</th>
+              <th class="right">MM30</th>
+              <th>Signal brut</th>
+            </tr>
+          </thead>
+          <tbody id="market-table"></tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+
+  <!-- STRATEGY -->
+  <section id="strategy">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">05 / ALGORITHM</div>
+        <h2>Stratégie de trading</h2>
+        <p class="desc">Recommandations et mécanisme de décision.</p>
+      </div>
+      <span class="pill">MM5 / MM12 / MM30</span>
+    </div>
+
+    <div class="grid two">
+      <article class="card">
+        <h3>Signaux sécurisés actuels</h3>
+        <div id="current-signals">Chargement...</div>
+        <p class="note" id="simulated-cash"></p>
+        <p class="note">
+          Achat plafonné à 20 % des liquidités restantes,
+          réserve minimale de 50, vente limitée aux positions détenues.
+        </p>
+      </article>
+      <article class="card">
+        <h3>Logique de l'algorithme</h3>
+        <div class="rule">
+          <span class="signal buy">BUY</span>
+          MM5 supérieure à MM12 de plus de 1 % et prix supérieur à MM30.
+        </div>
+        <div class="rule">
+          <span class="signal sell">SELL</span>
+          MM5 inférieure à MM12 de plus de 1 %, ou prix inférieur à MM30.
+        </div>
+        <div class="rule">
+          <span class="signal hold">HOLD</span>
+          Absence de condition claire, ou historique insuffisant.
+        </div>
+        <p class="note">30 observations minimum avant la première décision.</p>
+      </article>
+    </div>
+
+    <article class="card stack">
+      <h3>Journal des signaux reconstruits</h3>
+      <p class="desc">
+        Les 12 dernières observations du marché,
+        analysées avec la stratégie MM5 / MM12 / MM30.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Observation</th>
+              <th>A</th>
+              <th>B</th>
+              <th>C</th>
+            </tr>
+          </thead>
+          <tbody id="signal-history"></tbody>
+        </table>
+      </div>
+      <p class="note">
+        Il ne s'agit ni d'ordres exécutés, ni du journal privé
+        output/decision_log.jsonl.
+      </p>
+    </article>
+  </section>
+
+  <!-- RISK -->
+  <section id="risk">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">06 / RISK ANALYSIS</div>
+        <h2>Analyse des risques</h2>
+        <p class="desc">Risques du marché et limites de la simulation.</p>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <article class="card">
+        <h3>Produit <span id="risk-product">A</span></h3>
+        <div class="risk-tiles">
+          <div class="risk-tile">
+            <span>Volatilité</span>
+            <strong id="price-volatility">—</strong>
+          </div>
+          <div class="risk-tile">
+            <span>Drawdown max.</span>
+            <strong id="price-drawdown">—</strong>
+          </div>
+          <div class="risk-tile">
+            <span>Variation totale</span>
+            <strong id="price-return">—</strong>
+          </div>
+        </div>
+        <p class="note">
+          Ces indicateurs portent sur le prix du produit sélectionné,
+          pas sur la valeur totale du portefeuille.
+        </p>
+      </article>
 
       <article class="card">
-
-        <h3 id="chart-heading">
-          Produit A — Évolution du prix
-        </h3>
-
-        <p class="note" id="chart-summary">
-          Chargement...
-        </p>
-
-        <div class="chart-container" id="price-chart"></div>
-
-        <div class="chart-legend">
-          <span><i style="background:#4d91ff"></i>Prix</span>
-          <span><i style="background:#34d4a3"></i>MM5</span>
-          <span><i style="background:#f6bf65"></i>MM12</span>
-          <span><i style="background:#c49aff"></i>MM30</span>
-        </div>
-
-      </article>
-
-      <article class="card" style="margin-top:20px">
-
-        <h3>Indicateurs par produit</h3>
-
-        <div class="table-scroll">
-
-          <table>
-
-            <thead>
-              <tr>
-                <th>Produit</th>
-                <th>Dernier prix</th>
-                <th>MM5</th>
-                <th>MM12</th>
-                <th>MM30</th>
-                <th>Signal</th>
-              </tr>
-            </thead>
-
-            <tbody id="market-table"></tbody>
-
-          </table>
-
-        </div>
-
-      </article>
-
-    </section>
-
-    <!-- STRATEGY -->
-
-    <section id="strategy">
-
-      <div class="section-heading">
-        <div>
-          <h2>Stratégie de trading</h2>
-          <p class="section-description">
-            Décisions simulées et explication des règles.
-          </p>
-        </div>
-
-        <span class="badge">MM5 / MM12 / MM30</span>
-      </div>
-
-      <div class="grid two-columns">
-
-        <article class="card">
-
-          <h3>Signaux actuels sécurisés</h3>
-
-          <div id="signals">
-            Chargement...
-          </div>
-
-          <p class="note">
-            Réserve minimale de 50, budget d'achat limité
-            à 20 % des liquidités et ventes limitées
-            aux quantités détenues.
-          </p>
-
-        </article>
-
-        <article class="card">
-
-          <h3>Règles de décision</h3>
-
-          <div class="strategy-rule">
-            <span class="badge buy">BUY</span>
-            MM5 supérieure à MM12 de plus de 1 %,
-            avec un prix supérieur à MM30.
-          </div>
-
-          <div class="strategy-rule">
-            <span class="badge sell">SELL</span>
-            MM5 inférieure à MM12 de plus de 1 %,
-            ou prix inférieur à MM30.
-          </div>
-
-          <div class="strategy-rule">
-            <span class="badge hold">HOLD</span>
-            Aucune condition d'achat ou de vente remplie.
-          </div>
-
-          <p class="note">
-            Il faut au minimum 30 observations pour
-            produire un signal.
-          </p>
-
-        </article>
-
-      </div>
-
-      <article class="card" style="margin-top:20px">
-
-        <h3>Historique récent des signaux</h3>
-
+        <h3>Gestion du risque</h3>
+        <div class="rule">◈ Réserve de liquidités : <strong>50 minimum</strong></div>
+        <div class="rule">◈ Budget par achat : <strong>20 % maximum</strong></div>
+        <div class="rule">◈ Vente : <strong>quantités détenues uniquement</strong></div>
+        <div class="rule">◈ Signal ENSIM : <strong>de −1 à +1</strong></div>
         <p class="note">
-          Signaux reconstruits à partir des données de marché.
-          Ce tableau ne représente pas les transactions exécutées.
+          Les protections sont appliquées à des décisions simulées.
+          Elles ne garantissent ni profit ni stabilité du portefeuille.
         </p>
-
-        <div class="table-scroll">
-
-          <table>
-
-            <thead>
-              <tr>
-                <th>Observation</th>
-                <th>A</th>
-                <th>B</th>
-                <th>C</th>
-              </tr>
-            </thead>
-
-            <tbody id="signal-history"></tbody>
-
-          </table>
-
-        </div>
-
       </article>
+    </div>
+  </section>
 
-    </section>
+  <footer>
+    ENSIM TRADE TERMINAL · TP2 Business Intelligence ·
+    Données pédagogiques du simulateur ENSIM ·
+    Aucun ordre passé depuis cette interface.
+  </footer>
 
-    <!-- RISK -->
-
-    <section id="risk">
-
-      <div class="section-heading">
-        <div>
-          <h2>Analyse des risques</h2>
-          <p class="section-description">
-            Risques mesurés sur les prix du marché.
-          </p>
-        </div>
-      </div>
-
-      <div class="grid two-columns">
-
-        <article class="card">
-
-          <h3>
-            Produit sélectionné :
-            <span id="risk-product">A</span>
-          </h3>
-
-          <div class="risk-grid">
-
-            <div class="risk-tile">
-              <span>Volatilité</span>
-              <strong id="volatility">—</strong>
-            </div>
-
-            <div class="risk-tile">
-              <span>Drawdown maximal</span>
-              <strong id="drawdown">—</strong>
-            </div>
-
-            <div class="risk-tile">
-              <span>Variation totale</span>
-              <strong id="price-change">—</strong>
-            </div>
-
-          </div>
-
-          <p class="note">
-            La volatilité représente l'écart-type des rendements
-            par observation. Le drawdown correspond à la
-            plus forte baisse du prix depuis un sommet.
-          </p>
-
-        </article>
-
-        <article class="card">
-
-          <h3>Performance historique du portefeuille</h3>
-
-          <p>
-            Le rendement et le drawdown historiques
-            du portefeuille nécessitent l'historique
-            des positions ou des transactions.
-          </p>
-
-          <p class="note">
-            Ces indicateurs ne peuvent pas être déduits
-            du seul portefeuille actuel.
-          </p>
-
-          <span class="badge">
-            Historique à compléter
-          </span>
-
-        </article>
-
-      </div>
-
-    </section>
-
-    <footer>
-      ENSIM Trade Center — TP2 Business Intelligence.
-      Dashboard pédagogique d'aide à la décision.
-    </footer>
-
-  </main>
-
+</main>
 </div>
 
 <script>
-  "use strict";
+"use strict";
 
-  // ==================================================
-  // CONFIGURATION
-  // ==================================================
+/* ============================================
+   CONFIGURATION
+============================================ */
 
-  const ROOT =
-    "https://raw.githubusercontent.com/" +
-    "exofri/ensim-trade-center/main/";
+const ROOT =
+  "https://raw.githubusercontent.com/" +
+  "exofri/ensim-trade-center/main/";
 
-  const PRODUCTS = ["A", "B", "C"];
+const PRODUCTS = ["A", "B", "C"];
 
-  const COLORS = {
-    cash: "#a5b4cf",
-    A: "#4d91ff",
-    B: "#34d4a3",
-    C: "#f6bf65"
-  };
+const TRADERS = [
+  {id:"aziz",name:"Mon trader",color:"#2bd8b7"},
+  {id:"random_trader",name:"Random Trader",color:"#9778ff"},
+  {id:"random_buyer",name:"Random Buyer",color:"#ffca78"},
+  {id:"random_seller",name:"Random Seller",color:"#ff6d8e"}
+];
 
-  const state = {
-    market: null,
-    holdings: null,
-    selectedProduct: "A"
-  };
+const ASSET_COLORS = {
+  cash:"#72738d",
+  A:"#9778ff",
+  B:"#2bd8b7",
+  C:"#ffca78"
+};
 
-  const $ = id => document.getElementById(id);
+const state = {
+  market:null,
+  holdings:null,
+  selected:"A"
+};
 
-  const formatNumber = value =>
-    Number(value).toLocaleString("fr-FR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+const $ = id => document.getElementById(id);
 
-  const formatPercent = value =>
-    Number.isFinite(value)
-      ? (value * 100).toLocaleString("fr-FR", {
-          maximumFractionDigits: 2
-        }) + " %"
-      : "—";
+function number(value,decimals=2) {
+  return Number(value).toLocaleString("fr-FR",{
+    minimumFractionDigits:decimals,
+    maximumFractionDigits:decimals
+  });
+}
 
+function pct(value) {
+  return Number.isFinite(value)
+    ? number(value*100,2)+" %"
+    : "—";
+}
 
-  // ==================================================
-  // FETCH DATA
-  // ==================================================
+function dateText(value) {
+  const d = new Date(value);
+  return Number.isNaN(d.getTime())
+    ? "Date inconnue"
+    : d.toLocaleString("fr-FR");
+}
 
-  async function fetchJSON(url) {
-    const response = await fetch(url, {
-      cache: "no-store"
-    });
+async function fetchJSON(url) {
+  const res = await fetch(url,{cache:"no-store"});
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  return res.json();
+}
 
-    if (!response.ok) {
-      throw new Error("HTTP " + response.status);
+/* ============================================
+   MARKET SERIES & STRATEGY
+============================================ */
+
+function pricesOf(product) {
+  return state.market.history
+    .map(row => row[product]==null
+      ? NaN
+      : Number(row[product]))
+    .filter(Number.isFinite);
+}
+
+function movingAverage(values,window) {
+  const output=[];
+  let sum=0;
+
+  for(let i=0;i<values.length;i++) {
+    sum+=values[i];
+
+    if(i>=window) {
+      sum-=values[i-window];
     }
 
-    return response.json();
+    output.push(
+      i>=window-1 ? sum/window : null
+    );
   }
 
+  return output;
+}
 
-  // ==================================================
-  // MARKET DATA
-  // ==================================================
+function averageLast(prices,window) {
+  if(prices.length<window) return null;
 
-  function getPrices(product) {
-    return state.market.history
-      .map(row =>
-        row[product] == null
-          ? NaN
-          : Number(row[product])
-      )
-      .filter(Number.isFinite);
+  return prices.slice(-window)
+    .reduce((a,b)=>a+b,0)/window;
+}
+
+function computeSignal(prices) {
+  if(prices.length<30) return 0;
+
+  const m5=averageLast(prices,5);
+  const m12=averageLast(prices,12);
+  const m30=averageLast(prices,30);
+  const price=prices.at(-1);
+
+  if(m12<=0 || m30<=0) return 0;
+
+  const diff=(m5-m12)/m12;
+
+  if(diff>0.01 && price>m30) return 0.5;
+  if(diff< -0.01 || price<m30) return -0.5;
+
+  return 0;
+}
+
+function secureSignal(signal,price,cash,quantity) {
+  if(
+    ![signal,price,cash,quantity].every(Number.isFinite) ||
+    price<=0
+  ) return 0;
+
+  if(signal>0) {
+    const budget=Math.min(
+      Math.max(0,cash-50),
+      Math.max(0,cash)*0.20
+    );
+
+    const allowed=Math.min(signal*100,budget/price);
+
+    return Math.max(
+      0,
+      Math.floor(allowed/100*1000+1e-9)/1000
+    );
   }
 
-  function movingAverage(prices, window) {
-    return prices.map((_, index) => {
-      if (index + 1 < window) {
-        return null;
-      }
+  if(signal<0) {
+    const allowed=Math.min(
+      Math.abs(signal)*100,
+      Math.max(0,quantity)
+    );
 
-      const values = prices.slice(
-        index + 1 - window,
-        index + 1
-      );
-
-      return values.reduce(
-        (sum, value) => sum + value,
-        0
-      ) / window;
-    });
+    return -Math.max(
+      0,
+      Math.floor(allowed/100*1000+1e-9)/1000
+    );
   }
 
-  function computeSignal(prices) {
-    if (prices.length < 30) {
-      return 0;
-    }
+  return 0;
+}
 
-    const mm5 = movingAverage(prices, 5).at(-1);
-    const mm12 = movingAverage(prices, 12).at(-1);
-    const mm30 = movingAverage(prices, 30).at(-1);
+/* ============================================
+   RISK FUNCTIONS
+============================================ */
 
-    const currentPrice = prices.at(-1);
+function returnsOf(values) {
+  const returns=[];
 
-    if (mm12 <= 0 || mm30 <= 0) {
-      return 0;
-    }
+  for(let i=1;i<values.length;i++) {
+    const a=values[i-1];
+    const b=values[i];
 
-    const difference = (mm5 - mm12) / mm12;
-
-    if (
-      difference > 0.01 &&
-      currentPrice > mm30
+    if(
+      Number.isFinite(a) &&
+      Number.isFinite(b) &&
+      a>0
     ) {
-      return 0.5;
-    }
-
-    if (
-      difference < -0.01 ||
-      currentPrice < mm30
-    ) {
-      return -0.5;
-    }
-
-    return 0;
-  }
-
-
-  // ==================================================
-  // SECURE SIGNAL
-  // ==================================================
-
-  function secureSignal(signal, price, money, quantity) {
-    if (!Number.isFinite(price) || price <= 0) {
-      return 0;
-    }
-
-    if (signal > 0) {
-      const available = Math.max(0, money - 50);
-
-      const budget = Math.min(
-        available,
-        Math.max(0, money) * 0.20
-      );
-
-      const allowedUnits = Math.min(
-        signal * 100,
-        budget / price
-      );
-
-      return Math.max(
-        0,
-        Math.floor(
-          allowedUnits / 100 * 1000 + 1e-9
-        ) / 1000
-      );
-    }
-
-    if (signal < 0) {
-      const allowedUnits = Math.min(
-        Math.abs(signal) * 100,
-        Math.max(0, quantity)
-      );
-
-      return -Math.max(
-        0,
-        Math.floor(
-          allowedUnits / 100 * 1000 + 1e-9
-        ) / 1000
-      );
-    }
-
-    return 0;
-  }
-
-
-  // ==================================================
-  // PORTFOLIO
-  // ==================================================
-
-  function renderPortfolio() {
-    const holdings = state.holdings;
-
-    const cash = Number(holdings.money);
-
-    const positions = {};
-
-    const values = {};
-
-    let assetsTotal = 0;
-
-    for (const product of PRODUCTS) {
-      const price = getPrices(product).at(-1) || 0;
-
-      positions[product] =
-        Number(holdings.products[product] || 0);
-
-      values[product] =
-        positions[product] * price;
-
-      assetsTotal += values[product];
-    }
-
-    const total = cash + assetsTotal;
-
-    $("portfolio-total").textContent =
-      formatNumber(total);
-
-    $("portfolio-cash").textContent =
-      formatNumber(cash);
-
-    $("portfolio-assets").textContent =
-      formatNumber(assetsTotal);
-
-    $("cash-share").textContent =
-      total > 0
-        ? formatPercent(cash / total)
-        : "—";
-
-    $("market-count").textContent =
-      state.market.history.length + " observations";
-
-    const allocation = $("allocation");
-    const legend = $("allocation-legend");
-
-    allocation.replaceChildren();
-    legend.replaceChildren();
-
-    const categories = {
-      cash: cash,
-      ...values
-    };
-
-    for (const [name, value] of Object.entries(categories)) {
-      const color = COLORS[name];
-
-      const percentage =
-        total > 0 ? value / total : 0;
-
-      const segment = document.createElement("span");
-
-      segment.className = "allocation-segment";
-      segment.style.width = (percentage * 100) + "%";
-      segment.style.background = color;
-
-      allocation.appendChild(segment);
-
-      const row = document.createElement("div");
-      row.className = "legend-row";
-
-      const left = document.createElement("div");
-      left.className = "legend-left";
-
-      const dot = document.createElement("span");
-      dot.className = "dot";
-      dot.style.background = color;
-
-      const nameLabel = document.createElement("span");
-      nameLabel.textContent =
-        name === "cash"
-          ? "Liquidités"
-          : "Produit " + name;
-
-      left.append(dot, nameLabel);
-
-      const right = document.createElement("strong");
-
-      right.textContent =
-        formatNumber(value) +
-        " (" +
-        formatPercent(percentage) +
-        ")";
-
-      row.append(left, right);
-      legend.appendChild(row);
-    }
-
-    const positionsContainer = $("positions");
-
-    positionsContainer.replaceChildren();
-
-    for (const product of PRODUCTS) {
-      const row = document.createElement("div");
-      row.className = "position-row";
-
-      const label = document.createElement("span");
-      label.textContent =
-        "Produit " + product +
-        " · " + formatNumber(positions[product]) +
-        " unités";
-
-      const value = document.createElement("strong");
-      value.textContent = formatNumber(values[product]);
-
-      row.append(label, value);
-      positionsContainer.appendChild(row);
+      returns.push(b/a-1);
     }
   }
 
+  return returns;
+}
 
-  // ==================================================
-  // TRADER COMPARISON
-  // ==================================================
+function volatility(values) {
+  const r=returnsOf(values);
 
-  async function renderComparison() {
-    const container = $("comparison-bars");
+  if(r.length<2) return null;
 
-    try {
-      const data = await fetchJSON(
-        "./data/portfolio_comparison.json"
-      );
+  const mean=r.reduce((a,b)=>a+b,0)/r.length;
 
-      const traders = [...data.comparison].sort(
-        (a, b) => b.total_value - a.total_value
-      );
+  const variance=r.reduce(
+    (s,v)=>s+(v-mean)**2,0
+  )/(r.length-1);
 
-      const maxValue = Math.max(
-        1,
-        ...traders.map(t => t.total_value)
-      );
+  return Math.sqrt(variance);
+}
 
-      container.replaceChildren();
+function maxDrawdown(values) {
+  if(values.length<2) return null;
 
-      for (const trader of traders) {
-        const item = document.createElement("div");
-        item.className = "comparison-item";
+  let peak=-Infinity;
+  let worst=0;
 
-        const top = document.createElement("div");
-        top.className = "comparison-top";
+  for(const value of values) {
+    if(!Number.isFinite(value) || value<=0) {
+      continue;
+    }
 
-        const name = document.createElement("span");
-        name.textContent = trader.name;
+    peak=Math.max(peak,value);
+    worst=Math.max(worst,(peak-value)/peak);
+  }
 
-        const total = document.createElement("strong");
-        total.textContent =
-          formatNumber(trader.total_value);
+  return Number.isFinite(peak) ? worst : null;
+}
 
-        top.append(name, total);
+/* ============================================
+   CHART RENDERER
+============================================ */
 
-        const track = document.createElement("div");
-        track.className = "comparison-track";
+function drawLineChart(elementId,series,labelsCount) {
+  const container=$(elementId);
+  container.replaceChildren();
 
-        const fill = document.createElement("div");
+  if(labelsCount<2) {
+    container.innerHTML=
+      '<div class="chart-empty">Pas assez de données.</div>';
+    return;
+  }
 
-        fill.className =
-          "comparison-fill" +
-          (trader.trader_id === "aziz" ? " mine" : "");
+  const values=series.flatMap(s=>s.values)
+    .filter(v=>typeof v==="number" && Number.isFinite(v));
 
-        fill.style.width =
-          (trader.total_value / maxValue * 100) + "%";
+  if(!values.length) {
+    container.innerHTML=
+      '<div class="chart-empty">Aucune donnée disponible.</div>';
+    return;
+  }
 
-        track.appendChild(fill);
+  const W=1000,H=380;
+  const L=87,R=24,T=22,B=42;
 
-        const detail = document.createElement("div");
-        detail.className = "comparison-detail";
+  let min=Math.min(...values);
+  let max=Math.max(...values);
 
-        detail.textContent =
-          "Liquidités : " +
-          formatNumber(trader.cash) +
-          " · Actifs : " +
-          formatNumber(trader.assets_value);
+  if(min===max) {
+    min-=1;
+    max+=1;
+  }
 
-        item.append(top, track, detail);
-        container.appendChild(item);
+  const pad=(max-min)*0.09;
+  min-=pad;
+  max+=pad;
+
+  const x=i=>L+(W-L-R)*i/(labelsCount-1);
+  const y=v=>T+(H-T-B)*(max-v)/(max-min);
+
+  const NS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(NS,"svg");
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svg.setAttribute("role","img");
+  svg.setAttribute("aria-label","Graphique d'évolution");
+
+  function el(tag,attributes={}) {
+    const node=document.createElementNS(NS,tag);
+    for(const [k,v] of Object.entries(attributes)) {
+      node.setAttribute(k,String(v));
+    }
+    return node;
+  }
+
+  for(let i=0;i<=4;i++) {
+    const yy=T+(H-T-B)*i/4;
+
+    svg.appendChild(el("line",{
+      x1:L,y1:yy,x2:W-R,y2:yy,
+      stroke:"#333148",
+      "stroke-dasharray":"4 6"
+    }));
+
+    const t=el("text",{
+      x:6,y:yy+5,
+      fill:"#a3a0bc",
+      "font-size":"15"
+    });
+
+    t.textContent=number(max-(max-min)*i/4,1);
+    svg.appendChild(t);
+  }
+
+  for(const s of series) {
+    let path="";
+    let started=false;
+
+    s.values.forEach((v,i)=>{
+      if(typeof v!=="number" || !Number.isFinite(v)) {
+        started=false;
+        return;
       }
 
-      $("comparison-date").textContent =
-        "Dernier instantané : " +
-        new Date(data.timestamp).toLocaleString("fr-FR") +
-        ". Les valeurs changent après actualisation du fichier publié.";
+      path+=(started?" L ":" M ")+
+        x(i).toFixed(2)+" "+
+        y(v).toFixed(2);
 
-    } catch (error) {
-      container.textContent =
-        "Comparaison indisponible : " + error.message;
-    }
+      started=true;
+    });
+
+    svg.appendChild(el("path",{
+      d:path,
+      fill:"none",
+      stroke:s.color,
+      "stroke-width":s.width || 2.8,
+      "stroke-linejoin":"round",
+      "stroke-linecap":"round",
+      opacity:s.opacity || 1
+    }));
   }
 
+  container.appendChild(svg);
+}
 
-  // ==================================================
-  // MARKET INDICATORS
-  // ==================================================
+function renderLegend(elementId,series) {
+  const target=$(elementId);
+  target.replaceChildren();
 
-  function renderMarketTable() {
-    const tbody = $("market-table");
+  for(const s of series) {
+    const item=document.createElement("span");
+    const line=document.createElement("i");
 
-    tbody.replaceChildren();
+    line.className="line-key";
+    line.style.background=s.color;
 
-    for (const product of PRODUCTS) {
-      const prices = getPrices(product);
+    item.append(line,document.createTextNode(s.name));
+    target.appendChild(item);
+  }
+}
 
-      const mm5 = movingAverage(prices, 5).at(-1);
-      const mm12 = movingAverage(prices, 12).at(-1);
-      const mm30 = movingAverage(prices, 30).at(-1);
+/* ============================================
+   PORTFOLIO
+============================================ */
 
-      const signal = computeSignal(prices);
+function renderPortfolio() {
+  const h=state.holdings;
+  const cash=Number(h.money);
+  const values={};
+  let assets=0;
 
-      const tr = document.createElement("tr");
-
-      const values = [
-        product,
-        prices.at(-1),
-        mm5,
-        mm12,
-        mm30
-      ];
-
-      for (const value of values) {
-        const td = document.createElement("td");
-
-        td.textContent =
-          value == null ? "—" :
-          typeof value === "number"
-            ? formatNumber(value)
-            : value;
-
-        tr.appendChild(td);
-      }
-
-      const signalCell = document.createElement("td");
-
-      const badge = document.createElement("span");
-
-      badge.className =
-        "badge " +
-        (signal > 0 ? "buy" : signal < 0 ? "sell" : "hold");
-
-      badge.textContent =
-        (signal > 0 ? "BUY " :
-         signal < 0 ? "SELL " : "HOLD ") +
-        (signal > 0 ? "+" : "") +
-        signal.toFixed(3);
-
-      signalCell.appendChild(badge);
-
-      tr.appendChild(signalCell);
-      tbody.appendChild(tr);
-    }
+  for(const p of PRODUCTS) {
+    const quantity=Number(h.products[p]||0);
+    const price=pricesOf(p).at(-1)||0;
+    values[p]=quantity*price;
+    assets+=values[p];
   }
 
+  const total=cash+assets;
 
-  // ==================================================
-  // SVG PRICE CHART
-  // ==================================================
+  $("total-value").textContent=number(total);
+  $("cash-value").textContent=number(cash);
+  $("assets-value").textContent=number(assets);
+  $("cash-percent").textContent=total>0?pct(cash/total):"—";
 
-  function drawChart() {
-    const product = state.selectedProduct;
-    const prices = getPrices(product);
+  $("observation-count").textContent=
+    state.market.history.length+" observations";
 
-    const container = $("price-chart");
+  const allocation=$("allocation");
+  const legend=$("allocation-legend");
+  const positions=$("positions");
 
-    if (prices.length < 2) {
-      container.textContent = "Données insuffisantes.";
-      return;
-    }
+  allocation.replaceChildren();
+  legend.replaceChildren();
+  positions.replaceChildren();
 
-    const W = 950;
-    const H = 350;
+  const categories={cash,...values};
 
-    const L = 65;
-    const R = 20;
-    const T = 20;
-    const B = 40;
+  for(const [name,value] of Object.entries(categories)) {
+    const ratio=total>0?value/total:0;
 
-    const datasets = [
-      { values: prices, color: "#4d91ff" },
-      { values: movingAverage(prices, 5), color: "#34d4a3" },
-      { values: movingAverage(prices, 12), color: "#f6bf65" },
-      { values: movingAverage(prices, 30), color: "#c49aff" }
-    ];
+    const segment=document.createElement("div");
+    segment.style.width=(ratio*100)+"%";
+    segment.style.background=ASSET_COLORS[name];
+    allocation.appendChild(segment);
 
-    const allValues = datasets
-      .flatMap(item => item.values)
-      .filter(value =>
-        value !== null && Number.isFinite(value)
-      );
+    const row=document.createElement("div");
+    row.className="legend-item";
 
-    let minimum = Math.min(...allValues);
-    let maximum = Math.max(...allValues);
+    const left=document.createElement("div");
+    left.className="legend-left";
 
-    if (minimum === maximum) {
-      minimum -= 1;
-      maximum += 1;
-    }
+    const dot=document.createElement("span");
+    dot.className="dot";
+    dot.style.background=ASSET_COLORS[name];
 
-    const margin = (maximum - minimum) * 0.08;
+    const label=document.createElement("span");
+    label.textContent=name==="cash"
+      ?"Liquidités"
+      :"Produit "+name;
 
-    minimum -= margin;
-    maximum += margin;
+    left.append(dot,label);
 
-    const x = index =>
-      L + (W - L - R) * index / (prices.length - 1);
+    const val=document.createElement("strong");
+    val.textContent=number(value)+" · "+pct(ratio);
 
-    const y = value =>
-      T + (H - T - B) *
-      (maximum - value) / (maximum - minimum);
-
-    const NS = "http://www.w3.org/2000/svg";
-
-    const svg = document.createElementNS(NS, "svg");
-
-    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-
-    // Grid
-    for (let i = 0; i <= 4; i++) {
-      const yy = T + i * (H - T - B) / 4;
-
-      const line = document.createElementNS(NS, "line");
-
-      line.setAttribute("x1", L);
-      line.setAttribute("x2", W - R);
-      line.setAttribute("y1", yy);
-      line.setAttribute("y2", yy);
-      line.setAttribute("stroke", "#344765");
-
-      svg.appendChild(line);
-
-      const label = document.createElementNS(NS, "text");
-
-      label.setAttribute("x", 5);
-      label.setAttribute("y", yy + 5);
-      label.setAttribute("fill", "#afc0d9");
-      label.setAttribute("font-size", 14);
-
-      label.textContent =
-        (maximum - i * (maximum - minimum) / 4)
-          .toFixed(2);
-
-      svg.appendChild(label);
-    }
-
-    // Curves
-    for (const dataset of datasets) {
-      let pathData = "";
-      let started = false;
-
-      dataset.values.forEach((value, index) => {
-        if (value == null || !Number.isFinite(value)) {
-          started = false;
-          return;
-        }
-
-        pathData +=
-          (started ? " L " : " M ") +
-          x(index).toFixed(2) +
-          " " +
-          y(value).toFixed(2);
-
-        started = true;
-      });
-
-      const path = document.createElementNS(NS, "path");
-
-      path.setAttribute("d", pathData);
-      path.setAttribute("fill", "none");
-      path.setAttribute("stroke", dataset.color);
-      path.setAttribute("stroke-width", 2.5);
-      path.setAttribute("stroke-linejoin", "round");
-
-      svg.appendChild(path);
-    }
-
-    container.replaceChildren(svg);
-
-    $("chart-heading").textContent =
-      "Produit " + product + " — Évolution du prix";
-
-    $("chart-summary").textContent =
-      prices.length +
-      " observations · Dernier prix : " +
-      formatNumber(prices.at(-1));
-
-    renderRisk();
+    row.append(left,val);
+    legend.appendChild(row);
   }
 
+  for(const p of PRODUCTS) {
+    const row=document.createElement("div");
+    row.className="position-item";
 
-  // ==================================================
-  // SECURED STRATEGY SIGNALS
-  // ==================================================
+    const label=document.createElement("span");
+    label.textContent="Produit "+p+
+      " · "+number(h.products[p]||0)+" unités";
 
-async function renderPerformance() {
-  const container = $("performance-chart");
-  const tbody = $("performance-table");
-  const legend = $("performance-legend");
+    const val=document.createElement("strong");
+    val.textContent=number(values[p]);
 
-  const colors = {
-    aziz: "#34d4a3",
-    random_trader: "#4d91ff",
-    random_buyer: "#f6bf65",
-    random_seller: "#c49aff"
-  };
+    row.append(label,val);
+    positions.appendChild(row);
+  }
+}
+
+/* ============================================
+   LIVE COMPARISON
+============================================ */
+
+async function renderComparison() {
+  const container=$("comparison-bars");
 
   try {
-    const data = await fetchJSON(
+    const data=await fetchJSON(
+      "./data/portfolio_comparison.json"
+    );
+
+    const traders=[...data.comparison]
+      .sort((a,b)=>b.total_value-a.total_value);
+
+    const maximum=Math.max(
+      1,
+      ...traders.map(t=>Number(t.total_value))
+    );
+
+    container.replaceChildren();
+
+    for(const trader of traders) {
+      const item=document.createElement("div");
+      item.className="compare-item";
+
+      const top=document.createElement("div");
+      top.className="compare-top";
+
+      const name=document.createElement("span");
+      name.textContent=trader.name;
+
+      const value=document.createElement("strong");
+      value.textContent=number(trader.total_value);
+
+      top.append(name,value);
+
+      const track=document.createElement("div");
+      track.className="track";
+
+      const fill=document.createElement("div");
+      fill.className="fill"+
+        (trader.trader_id==="aziz"?" mine":"");
+
+      fill.style.width=
+        Number(trader.total_value)/maximum*100+"%";
+
+      track.appendChild(fill);
+
+      const meta=document.createElement("div");
+      meta.className="compare-meta";
+      meta.textContent=
+        "Liquidités : "+number(trader.cash)+
+        " · Actifs : "+number(trader.assets_value);
+
+      item.append(top,track,meta);
+      container.appendChild(item);
+    }
+
+    $("comparison-date").textContent=
+      "Instantané publié : "+dateText(data.timestamp);
+
+  } catch(e) {
+    container.textContent=
+      "Comparaison indisponible : "+e.message;
+  }
+}
+
+/* ============================================
+   HISTORICAL PERFORMANCE
+============================================ */
+
+async function renderPerformance() {
+  const chart=$("performance-chart");
+  const tbody=$("performance-table");
+
+  try {
+    const data=await fetchJSON(
       "./data/portfolio_history.json"
     );
 
-    const snapshots = data.snapshots || [];
+    const snapshots=(data.snapshots||[])
+      .filter(s=>s && s.timestamp && Array.isArray(s.comparison))
+      .sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
 
-    $("performance-count").textContent =
-      snapshots.length + " relevé(s)";
+    $("snapshot-count").textContent=
+      snapshots.length+" relevé(s)";
 
-    if (snapshots.length < 2) {
-      container.textContent =
-        "Un deuxième relevé est nécessaire pour " +
-        "afficher l'évolution des portefeuilles.";
+    tbody.replaceChildren();
 
-      $("performance-info").textContent =
-        "L'historique commence au premier relevé " +
-        "enregistré. Aucun rendement antérieur " +
-        "n'est supposé.";
+    if(snapshots.length<2) {
+      chart.innerHTML=
+        '<div class="chart-empty">'+
+        'Un deuxième relevé est nécessaire '+
+        'pour tracer la performance historique.'+
+        '</div>';
 
-      tbody.replaceChildren();
-      legend.replaceChildren();
+      $("performance-period").textContent=
+        "L'historique commence au premier relevé collecté.";
+
+      $("performance-legend").replaceChildren();
       return;
     }
 
-    const ids = [
-      "aziz",
-      "random_trader",
-      "random_buyer",
-      "random_seller"
-    ];
-
-    const names = {
-      aziz: "Mon trader",
-      random_trader: "Random Trader",
-      random_buyer: "Random Buyer",
-      random_seller: "Random Seller"
-    };
-
-    const series = ids.map(id => ({
-      id,
-      name: names[id],
-      color: colors[id],
-      values: snapshots.map(snapshot => {
-        const trader = snapshot.comparison.find(
-          t => t.trader_id === id
+    const series=TRADERS.map(t=>({
+      ...t,
+      values:snapshots.map(s=>{
+        const row=s.comparison.find(
+          item=>item.trader_id===t.id
         );
 
-        return trader
-          ? Number(trader.total_value)
+        const value=row?Number(row.total_value):null;
+
+        return value!==null && Number.isFinite(value)
+          ? value
           : null;
       })
     }));
 
-    const validValues = series
-      .flatMap(s => s.values)
-      .filter(Number.isFinite);
+    drawLineChart(
+      "performance-chart",
+      series,
+      snapshots.length
+    );
 
-    if (validValues.length === 0) {
-      throw new Error("Aucune valeur historique.");
-    }
+    renderLegend("performance-legend",series);
 
-    const W = 950;
-    const H = 360;
-    const L = 90;
-    const R = 25;
-    const T = 25;
-    const B = 45;
+    for(const trader of series) {
+      const first=trader.values[0];
+      const last=trader.values.at(-1);
 
-    let min = Math.min(...validValues);
-    let max = Math.max(...validValues);
-
-    if (min === max) {
-      min -= 1;
-      max += 1;
-    }
-
-    const padding = (max - min) * 0.10;
-    min -= padding;
-    max += padding;
-
-    const x = index =>
-      L + (W - L - R) *
-      index / (snapshots.length - 1);
-
-    const y = value =>
-      T + (H - T - B) *
-      (max - value) / (max - min);
-
-    const NS = "http://www.w3.org/2000/svg";
-
-    const svg = document.createElementNS(NS, "svg");
-    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-
-    // Horizontal grid and value labels
-    for (let i = 0; i <= 4; i++) {
-      const yy = T + i * (H - T - B) / 4;
-
-      const line = document.createElementNS(NS, "line");
-      line.setAttribute("x1", L);
-      line.setAttribute("x2", W - R);
-      line.setAttribute("y1", yy);
-      line.setAttribute("y2", yy);
-      line.setAttribute("stroke", "#344765");
-
-      svg.appendChild(line);
-
-      const label = document.createElementNS(NS, "text");
-      label.setAttribute("x", 5);
-      label.setAttribute("y", yy + 5);
-      label.setAttribute("fill", "#afc0d9");
-      label.setAttribute("font-size", 14);
-
-      label.textContent = (
-        max - i * (max - min) / 4
-      ).toFixed(0);
-
-      svg.appendChild(label);
-    }
-
-    // One line for each trader
-    for (const trader of series) {
-      let d = "";
-      let started = false;
-
-      trader.values.forEach((value, index) => {
-        if (!Number.isFinite(value)) {
-          started = false;
-          return;
-        }
-
-        d += (started ? " L " : " M ") +
-          x(index).toFixed(2) + " " +
-          y(value).toFixed(2);
-
-        started = true;
-      });
-
-      const path = document.createElementNS(NS, "path");
-      path.setAttribute("d", d);
-      path.setAttribute("fill", "none");
-      path.setAttribute("stroke", trader.color);
-      path.setAttribute("stroke-width", "3");
-      path.setAttribute("stroke-linejoin", "round");
-
-      svg.appendChild(path);
-    }
-
-    container.replaceChildren(svg);
-
-    // Legend
-    legend.replaceChildren();
-
-    for (const trader of series) {
-      const item = document.createElement("span");
-      const line = document.createElement("i");
-
-      line.style.background = trader.color;
-
-      item.append(line, document.createTextNode(trader.name));
-      legend.appendChild(item);
-    }
-
-    // Return table
-    tbody.replaceChildren();
-
-    for (const trader of series) {
-      const first = trader.values[0];
-      const last = trader.values.at(-1);
-
-      const hasReturn =
-        Number.isFinite(first) &&
-        Number.isFinite(last) &&
-        first > 0;
-
-      const performance = hasReturn
-        ? (last / first - 1)
-        : null;
-
-      const tr = document.createElement("tr");
-
-      
-const drawdown = calculateMaxDrawdown(
-  trader.values
-);
-
-const cells = [
-  trader.name,
-  Number.isFinite(first) ? formatNumber(first) : "—",
-  Number.isFinite(last) ? formatNumber(last) : "—",
-  performance === null
-    ? "—"
-    : formatPercent(performance),
-  trader.values.filter(Number.isFinite).length >= 2
-    ? formatPercent(drawdown)
-    : "—"
-];
-
-
-      for (const value of cells) {
-        const td = document.createElement("td");
-        td.textContent = value;
-        tr.appendChild(td);
-      }
-
-      tbody.appendChild(tr);
-    }
-
-    $("performance-info").textContent =
-      "Période observée : " +
-      new Date(snapshots[0].timestamp)
-        .toLocaleString("fr-FR") +
-      " au " +
-      new Date(snapshots.at(-1).timestamp)
-        .toLocaleString("fr-FR") +
-      ". Rendements calculés uniquement sur cette période.";
-
-  } catch (error) {
-    container.textContent =
-      "Historique indisponible : " + error.message;
-  }
-}
-
-  function renderSignals() {
-    const container = $("signals");
-
-    container.replaceChildren();
-
-    let remainingMoney = Number(state.holdings.money);
-
-    const positions = {};
-
-    for (const product of PRODUCTS) {
-      positions[product] =
-        Number(state.holdings.products[product] || 0);
-    }
-
-    for (const product of PRODUCTS) {
-      const prices = getPrices(product);
-
-      const price = prices.at(-1);
-      const raw = computeSignal(prices);
-
-      const secured = secureSignal(
-        raw,
-        price,
-        remainingMoney,
-        positions[product]
+      const valid=trader.values.filter(
+        v=>typeof v==="number" && Number.isFinite(v)
       );
 
-      const units = secured * 100;
+      const canMeasure=
+        Number.isFinite(first) &&
+        Number.isFinite(last) &&
+        first>0;
 
-      remainingMoney -= units * price;
-      positions[product] += units;
+      const gain=canMeasure
+        ?last/first-1
+        :null;
 
-      const action =
-        secured > 0 ? "BUY" :
-        secured < 0 ? "SELL" : "HOLD";
+      const drawdown=valid.length>=2 &&
+        trader.values.every(Number.isFinite)
+        ?maxDrawdown(trader.values)
+        :null;
 
-      const row = document.createElement("div");
-      row.className = "signal-row";
+      const vol=trader.values.every(Number.isFinite)
+        ?volatility(trader.values)
+        :null;
 
-      const name = document.createElement("strong");
-      name.textContent = product;
+      const tr=document.createElement("tr");
 
-      const badge = document.createElement("span");
+      const cells=[
+        trader.name,
+        Number.isFinite(first)?number(first):"—",
+        Number.isFinite(last)?number(last):"—",
+        gain===null?"—":pct(gain),
+        drawdown===null?"—":pct(drawdown),
+        vol===null?"—":pct(vol)
+      ];
 
-      badge.className =
-        "badge " +
-        (secured > 0 ? "buy" :
-         secured < 0 ? "sell" : "hold");
+      cells.forEach((value,i)=>{
+        const td=document.createElement("td");
+        td.textContent=value;
+        if(i>0) td.className="right";
 
-      badge.textContent = action;
+        if(i===3 && gain!==null) {
+          td.classList.add(gain>=0?"good":"bad");
+        }
 
-      const signalValue = document.createElement("strong");
-
-      signalValue.textContent =
-        (secured > 0 ? "+" : "") +
-        secured.toFixed(3);
-
-      const quantity = document.createElement("small");
-
-      quantity.textContent =
-        formatNumber(Math.abs(units)) +
-        " unités simulées";
-
-      row.append(name, badge, signalValue, quantity);
-
-      container.appendChild(row);
-    }
-  }
-
-
-  // ==================================================
-  // HISTORICAL SIGNALS
-  // ==================================================
-
-  function renderSignalHistory() {
-    const history = state.market.history;
-
-    const tbody = $("signal-history");
-
-    tbody.replaceChildren();
-
-    const start = Math.max(
-      29,
-      history.length - 12
-    );
-
-    for (let i = start; i < history.length; i++) {
-      const tr = document.createElement("tr");
-
-      const indexCell = document.createElement("td");
-      indexCell.textContent = "#" + (i + 1);
-
-      tr.appendChild(indexCell);
-
-      for (const product of PRODUCTS) {
-        const prices = history
-          .slice(0, i + 1)
-          .map(row =>
-            row[product] == null
-              ? NaN
-              : Number(row[product])
-          )
-          .filter(Number.isFinite);
-
-        const currentSignal = computeSignal(prices);
-
-        const td = document.createElement("td");
-        const badge = document.createElement("span");
-
-        const action =
-          currentSignal > 0 ? "BUY" :
-          currentSignal < 0 ? "SELL" : "HOLD";
-
-        badge.className =
-          "badge " +
-          (currentSignal > 0 ? "buy" :
-           currentSignal < 0 ? "sell" : "hold");
-
-        badge.textContent = action;
-
-        td.appendChild(badge);
         tr.appendChild(td);
-      }
+      });
 
       tbody.appendChild(tr);
     }
+
+    $("performance-period").textContent=
+      "Période enregistrée : "+
+      dateText(snapshots[0].timestamp)+
+      " → "+
+      dateText(snapshots.at(-1).timestamp)+
+      ". Les mesures dépendent de la fréquence et du nombre de relevés.";
+
+  } catch(e) {
+    chart.textContent=
+      "Historique indisponible : "+e.message;
+    $("performance-period").textContent="";
+    tbody.replaceChildren();
+  }
+}
+
+/* ============================================
+   MARKET
+============================================ */
+
+function renderMarket() {
+  const tbody=$("market-table");
+  tbody.replaceChildren();
+
+  for(const p of PRODUCTS) {
+    const prices=pricesOf(p);
+
+    const columns=[
+      p,
+      prices.at(-1),
+      averageLast(prices,5),
+      averageLast(prices,12),
+      averageLast(prices,30)
+    ];
+
+    const signal=computeSignal(prices);
+    const tr=document.createElement("tr");
+
+    columns.forEach((v,i)=>{
+      const td=document.createElement("td");
+      td.textContent=i===0
+        ?v
+        :v===null || v===undefined
+          ?"—"
+          :number(v,4);
+
+      if(i>0) td.className="right";
+      tr.appendChild(td);
+    });
+
+    const td=document.createElement("td");
+    const badge=document.createElement("span");
+
+    badge.className="signal "+
+      (signal>0?"buy":signal<0?"sell":"hold");
+
+    badge.textContent=
+      (signal>0?"BUY":signal<0?"SELL":"HOLD")+
+      " "+(signal>0?"+":"")+signal.toFixed(3);
+
+    td.appendChild(badge);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
   }
 
+  renderMarketChart();
+}
 
-  // ==================================================
-  // RISK INDICATORS
-  // ==================================================
+function renderMarketChart() {
+  const p=state.selected;
+  const prices=pricesOf(p);
 
-  function renderRisk() {
-    const product = state.selectedProduct;
-
-    const prices = getPrices(product);
-
-    const returns = [];
-
-    for (let i = 1; i < prices.length; i++) {
-      if (prices[i - 1] > 0) {
-        returns.push(
-          prices[i] / prices[i - 1] - 1
-        );
-      }
-    }
-
-    const mean =
-      returns.length > 0
-        ? returns.reduce((a, b) => a + b, 0) / returns.length
-        : 0;
-
-    const variance =
-      returns.length > 1
-        ? returns.reduce(
-            (sum, value) => sum + (value - mean) ** 2,
-            0
-          ) / (returns.length - 1)
-        : 0;
-
-    const volatility = Math.sqrt(variance);
-
-    let peak = -Infinity;
-    let maxDrawdown = 0;
-
-    for (const price of prices) {
-      peak = Math.max(peak, price);
-
-      if (peak > 0) {
-        const drawdown = (peak - price) / peak;
-
-        maxDrawdown = Math.max(
-          maxDrawdown,
-          drawdown
-        );
-      }
-    }
-
-    const totalChange =
-      prices.length > 1 && prices[0] > 0
-        ? prices.at(-1) / prices[0] - 1
-        : NaN;
-
-    $("risk-product").textContent = product;
-
-    $("volatility").textContent =
-      formatPercent(volatility);
-
-    $("drawdown").textContent =
-      formatPercent(maxDrawdown);
-
-    $("price-change").textContent =
-      formatPercent(totalChange);
+  if(prices.length<2) {
+    $("market-chart").innerHTML=
+      '<div class="chart-empty">Données insuffisantes.</div>';
+    return;
   }
 
+  drawLineChart("market-chart",[
+    {name:"Prix",color:"#aa8bff",values:prices,width:3},
+    {name:"MM5",color:"#2bd8b7",values:movingAverage(prices,5)},
+    {name:"MM12",color:"#ffca78",values:movingAverage(prices,12)},
+    {name:"MM30",color:"#ff6d8e",values:movingAverage(prices,30)}
+  ],prices.length);
 
-function calculateMaxDrawdown(values) {
-  let peak = -Infinity;
-  let maxDrawdown = 0;
+  $("market-heading").textContent=
+    "Produit "+p+" — Évolution des prix";
 
-  for (const value of values) {
-    if (!Number.isFinite(value) || value <= 0) {
-      continue;
-    }
+  $("market-summary").textContent=
+    prices.length+" observations · Dernier prix : "+
+    number(prices.at(-1),4);
 
-    peak = Math.max(peak, value);
+  renderPriceRisk();
+}
 
-    const drawdown = (peak - value) / peak;
+/* ============================================
+   STRATEGY
+============================================ */
 
-    maxDrawdown = Math.max(
-      maxDrawdown,
-      drawdown
+function renderCurrentSignals() {
+  const container=$("current-signals");
+  container.replaceChildren();
+
+  let remainingCash=Number(state.holdings.money);
+
+  const positions={};
+
+  for(const p of PRODUCTS) {
+    positions[p]=Number(
+      state.holdings.products[p]||0
     );
   }
 
-  return maxDrawdown;
+  for(const p of PRODUCTS) {
+    const prices=pricesOf(p);
+    const price=prices.at(-1);
+
+    const raw=computeSignal(prices);
+
+    const safe=secureSignal(
+      raw,price,remainingCash,positions[p]
+    );
+
+    const units=safe*100;
+    remainingCash-=units*price;
+    positions[p]+=units;
+
+    const action=safe>0?"BUY":safe<0?"SELL":"HOLD";
+
+    const item=document.createElement("div");
+    item.className="signal-item";
+
+    const name=document.createElement("strong");
+    name.textContent=p;
+
+    const badge=document.createElement("span");
+    badge.className="signal "+action.toLowerCase();
+    badge.textContent=action;
+
+    const value=document.createElement("strong");
+    value.textContent=
+      (safe>0?"+":"")+safe.toFixed(3);
+
+    const quantity=document.createElement("small");
+    quantity.textContent=
+      number(Math.abs(units))+" unités simulées";
+
+    item.append(name,badge,value,quantity);
+    container.appendChild(item);
+  }
+
+  $("simulated-cash").textContent=
+    "Liquidités restantes simulées : "+
+    number(remainingCash);
 }
 
-  // ==================================================
-  // PRODUCT SELECTION
-  // ==================================================
+function renderSignalHistory() {
+  const rows=state.market.history;
+  const tbody=$("signal-history");
 
-  function selectProduct(product) {
-    state.selectedProduct = product;
+  tbody.replaceChildren();
 
-    document.querySelectorAll("[data-product]")
-      .forEach(button => {
-        button.classList.toggle(
-          "active",
-          button.dataset.product === product
-        );
-      });
+  for(
+    let i=Math.max(29,rows.length-12);
+    i<rows.length;
+    i++
+  ) {
+    const tr=document.createElement("tr");
 
-    drawChart();
-  }
+    const observation=document.createElement("td");
+    observation.textContent="#"+(i+1);
+    tr.appendChild(observation);
 
+    for(const p of PRODUCTS) {
+      const values=rows.slice(0,i+1)
+        .map(row=>row[p]==null?NaN:Number(row[p]))
+        .filter(Number.isFinite);
 
-  // ==================================================
-  // REFRESH DASHBOARD
-  // ==================================================
+      const signal=computeSignal(values);
+      const action=signal>0?"BUY":signal<0?"SELL":"HOLD";
 
-  async function refreshDashboard() {
-    const status = $("status");
+      const td=document.createElement("td");
+      const badge=document.createElement("span");
 
-    status.textContent = "Chargement...";
-    status.classList.remove("error");
+      badge.className="signal "+action.toLowerCase();
+      badge.textContent=action;
 
-    $("refresh").disabled = true;
-
-    try {
-      const [market, holdings] = await Promise.all([
-        fetchJSON(ROOT + "docs/data/market.json"),
-        fetchJSON(ROOT + "traders/aziz/holdings.json")
-      ]);
-
-      if (
-        !Array.isArray(market.history) ||
-        !holdings.products
-      ) {
-        throw new Error("Format ENSIM incorrect");
-      }
-
-      state.market = market;
-      state.holdings = holdings;
-
-      renderPortfolio();
-
-      renderMarketTable();
-
-      renderSignals();
-
-      renderSignalHistory();
-
-      drawChart();
-
-      await renderComparison();
-      await renderPerformance();
-      status.textContent = "● Données chargées";
-
-    } catch (error) {
-      console.error(error);
-
-      status.textContent = "● Erreur de chargement";
-      status.classList.add("error");
-
-    } finally {
-      $("refresh").disabled = false;
+      td.appendChild(badge);
+      tr.appendChild(td);
     }
+
+    tbody.appendChild(tr);
   }
+}
 
+/* ============================================
+   PRICE RISK
+============================================ */
 
-  // ==================================================
-  // EVENTS
-  // ==================================================
+function renderPriceRisk() {
+  const p=state.selected;
+  const prices=pricesOf(p);
 
-  document.querySelectorAll("[data-product]")
-    .forEach(button => {
-      button.addEventListener("click", () => {
-        selectProduct(button.dataset.product);
-      });
+  const vol=volatility(prices);
+  const dd=maxDrawdown(prices);
+
+  const gain=prices.length>=2 && prices[0]>0
+    ?prices.at(-1)/prices[0]-1
+    :null;
+
+  $("risk-product").textContent=p;
+
+  $("price-volatility").textContent=
+    vol===null?"—":pct(vol);
+
+  $("price-drawdown").textContent=
+    dd===null?"—":pct(dd);
+
+  $("price-return").textContent=
+    gain===null?"—":pct(gain);
+}
+
+/* ============================================
+   REFRESH & EVENTS
+============================================ */
+
+async function refreshDashboard() {
+  const status=$("status");
+  const button=$("refresh");
+
+  status.textContent="● Chargement...";
+  status.classList.remove("error");
+  button.disabled=true;
+
+  try {
+    const [market,holdings]=await Promise.all([
+      fetchJSON(ROOT+"docs/data/market.json"),
+      fetchJSON(ROOT+"traders/aziz/holdings.json")
+    ]);
+
+    if(
+      !Array.isArray(market.history) ||
+      !holdings.products
+    ) {
+      throw new Error("Données ENSIM invalides");
+    }
+
+    state.market=market;
+    state.holdings=holdings;
+
+    renderPortfolio();
+    renderMarket();
+    renderCurrentSignals();
+    renderSignalHistory();
+
+    // Independent sections: one unavailable JSON
+    // must not block the rest of the dashboard.
+    await Promise.all([
+      renderComparison(),
+      renderPerformance()
+    ]);
+
+    status.textContent="● Données chargées";
+
+  } catch(e) {
+    console.error(e);
+    status.textContent="● Connexion échouée";
+    status.classList.add("error");
+  } finally {
+    button.disabled=false;
+  }
+}
+
+document.querySelectorAll("[data-product]")
+  .forEach(button=>{
+    button.addEventListener("click",()=>{
+      state.selected=button.dataset.product;
+
+      document.querySelectorAll("[data-product]")
+        .forEach(b=>{
+          b.classList.toggle(
+            "active",
+            b.dataset.product===state.selected
+          );
+        });
+
+      if(state.market) renderMarketChart();
     });
+  });
 
-  $("refresh").addEventListener(
-    "click",
-    refreshDashboard
-  );
+$("refresh").addEventListener(
+  "click",
+  refreshDashboard
+);
 
-  document.querySelectorAll(".sidebar nav a")
-    .forEach(link => {
-      link.addEventListener("click", () => {
-        document.querySelectorAll(".sidebar nav a")
-          .forEach(item => item.classList.remove("active"));
+document.querySelectorAll("nav a")
+  .forEach(link=>{
+    link.addEventListener("click",()=>{
+      document.querySelectorAll("nav a")
+        .forEach(a=>a.classList.remove("active"));
 
-        link.classList.add("active");
-      });
+      link.classList.add("active");
     });
+  });
 
-  refreshDashboard();
-
+refreshDashboard();
 </script>
 
 </body>
