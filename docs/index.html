@@ -3,778 +3,1165 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080a12">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080811">
 <title>ENSIM | Trade Terminal</title>
 
 <style>
 :root {
-  --bg:#080a12;
-  --side:#0c0d19;
-  --panel:#111323;
-  --panel2:#171a2e;
-  --border:#303149;
-  --text:#f1f1fc;
-  --muted:#a2a3bb;
-  --purple:#9778ff;
-  --purple2:#6548d2;
-  --teal:#2bd8b7;
-  --red:#ff6d8e;
-  --amber:#ffca78;
-  --shadow:0 12px 45px #0005;
+  color-scheme: dark;
+  --bg: #080911;
+  --side: #0d0d1a;
+  --card: #141425;
+  --card2: #1d1b32;
+  --border: #37314d;
+  --text: #f5f2ff;
+  --muted: #b2abc8;
+  --purple: #a58bff;
+  --teal: #29d9ad;
+  --pink: #ff7796;
+  --gold: #f7bf71;
 }
 
-* { box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
 body {
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Inter,"Segoe UI",Arial,sans-serif;
-  font-size:17px;
-  line-height:1.55;
+  margin: 0;
+  font: 17px/1.6 "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
 }
+
 body::before {
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-1;
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
-    linear-gradient(#846bff08 1px,transparent 1px),
-    linear-gradient(90deg,#846bff08 1px,transparent 1px),
-    radial-gradient(circle at 85% 10%,#6342ab1c,transparent 36%),
-    radial-gradient(circle at 8% 85%,#087d7511,transparent 35%);
-  background-size:48px 48px,48px 48px,auto,auto;
-}
-a { color:inherit; text-decoration:none; }
-button { font:inherit; cursor:pointer; }
-button:focus-visible,a:focus-visible {
-  outline:2px solid var(--purple);
-  outline-offset:3px;
-}
-button:disabled { opacity:.5;cursor:not-allowed; }
-.app {
-  display:grid;
-  grid-template-columns:265px minmax(0,1fr);
-  min-height:100vh;
+    linear-gradient(#7d68bd0b 1px, transparent 1px),
+    linear-gradient(90deg, #7d68bd0b 1px, transparent 1px),
+    radial-gradient(
+      ellipse at 80% 5%,
+      #623a9630,
+      transparent 48%
+    );
+  background-size: 45px 45px, 45px 45px, auto;
 }
 
-/* NAVIGATION */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 3px;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+
 .sidebar {
-  position:sticky;
-  top:0;
-  height:100vh;
-  background:#0c0d19f2;
-  border-right:1px solid #302c49;
-  padding:29px 18px;
-  display:flex;
-  flex-direction:column;
-  z-index:5;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 30px 18px;
+  background: #0d0d1af5;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
 }
-.logo {
-  display:flex;
-  align-items:center;
-  gap:13px;
-  padding:0 8px;
-  margin-bottom:55px;
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 50px;
 }
-.logo-icon {
-  width:51px;
-  height:51px;
-  border:1px solid #a18bff;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
-  color:#c9baff;
-  background:linear-gradient(145deg,#3b2c6a,#141329);
-  box-shadow:0 0 22px #8165ff25;
-  font-size:26px;
-  font-weight:900;
+
+.brand-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid #846be0;
+  border-radius: 14px;
+  background: #2b2148;
+  color: #d0c1ff;
+  font-size: 27px;
+  font-weight: 900;
+  box-shadow: 0 0 25px #7855e744;
 }
-.logo strong { display:block;font-size:19px;letter-spacing:.4px; }
-.logo small { display:block;color:var(--muted);font-size:11px;letter-spacing:1.4px; }
-.nav-caption {
-  color:#797b9d;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:2px;
-  padding:0 16px;
-  margin-bottom:14px;
+
+.brand strong {
+  display: block;
+  font-size: 19px;
 }
-nav { display:grid;gap:7px; }
+
+.brand small {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.nav-label,
+.overline {
+  color: var(--purple);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.nav-label {
+  margin: 0 14px 14px;
+}
+
+nav {
+  display: grid;
+  gap: 7px;
+}
+
 nav a {
-  display:flex;
-  align-items:center;
-  gap:13px;
-  padding:14px 16px;
-  border-radius:12px;
-  color:#a4a4bd;
-  font-weight:650;
-  font-size:16px;
-  transition:.2s;
+  padding: 13px 15px;
+  border-radius: 11px;
+  color: #bcb5d0;
+  font-size: 16px;
+  font-weight: 650;
+  transition: 0.2s;
 }
-nav a:hover,nav a.active {
-  color:#f7f4ff;
-  background:linear-gradient(90deg,#4b397d80,#25203945);
-  box-shadow:inset 3px 0 var(--purple);
-}
-.nav-icon { width:21px;text-align:center;color:#ae92ff; }
-.side-bottom {
-  margin-top:auto;
-  padding:18px 14px;
-  border:1px solid var(--border);
-  border-radius:15px;
-  background:#161629;
-}
-.side-bottom strong { display:block;font-size:14px; }
-.side-bottom small { color:var(--muted);font-size:12px; }
 
-/* CONTENT */
+nav a:hover,
+nav a.active {
+  background: #3b2c58;
+  color: white;
+  box-shadow: inset 3px 0 var(--purple);
+}
+
+.side-footer {
+  margin-top: auto;
+  padding: 20px 12px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* MAIN */
+
 main {
-  width:100%;
-  min-width:0;
-  max-width:1760px;
-  margin:auto;
-  padding:40px clamp(20px,3.5vw,64px) 65px;
+  min-width: 0;
+  width: 100%;
+  max-width: 1800px;
+  margin: auto;
+  padding: 38px clamp(20px, 3.4vw, 60px) 75px;
 }
-.hero {
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:18px;
-  flex-wrap:wrap;
-  padding:31px;
-  border:1px solid #493c70;
-  border-radius:20px;
-  background:
-    radial-gradient(circle at 90% 40%,#7b4edd26,transparent 40%),
-    linear-gradient(120deg,#191629,#111321);
-  box-shadow:var(--shadow);
-}
-.hero::after {
-  content:"";
-  position:absolute;
-  right:-35px;
-  top:-100px;
-  width:250px;
-  height:250px;
-  border:1px solid #a58bff26;
-  border-radius:50%;
-  box-shadow:0 0 0 35px #a58bff09,0 0 0 75px #a58bff05;
-  pointer-events:none;
-}
-.eyebrow {
-  color:#b09cff;
-  font-size:12px;
-  font-weight:850;
-  letter-spacing:2.3px;
-}
-h1 { margin:8px 0;font-size:clamp(34px,3vw,49px);line-height:1.15; }
-.hero p { color:#b6b4cb;font-size:17px;margin:8px 0 0; }
-.hero-actions { display:flex;align-items:center;gap:12px;z-index:1;flex-wrap:wrap; }
-.connection {
-  color:var(--teal);
-  font-size:14px;
-  font-weight:800;
-  padding:11px 15px;
-  border:1px solid #246e66;
-  border-radius:10px;
-  background:#112923;
-}
-.connection.error { color:var(--red);border-color:#6c3044;background:#2c1720; }
-.refresh {
-  color:#fff;
-  background:linear-gradient(130deg,#7754e8,#5034b1);
-  border:1px solid #9d84ff;
-  border-radius:11px;
-  padding:12px 19px;
-  font-weight:800;
-  box-shadow:0 5px 22px #7955ff35;
-  transition:.2s;
-}
-.refresh:hover { transform:translateY(-2px);filter:brightness(1.15); }
 
-.notice {
-  margin:24px 0 33px;
-  padding:17px 21px;
-  border:1px solid #5c466a;
-  border-radius:13px;
-  color:#d6cde3;
-  background:#211a2c;
-  font-size:15px;
+.hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 32px;
+  border: 1px solid #554274;
+  border-radius: 20px;
+  background:
+    radial-gradient(
+      circle at 88% 45%,
+      #6440a644,
+      transparent 43%
+    ),
+    linear-gradient(110deg, #201a33, #11111e);
 }
-section { margin-top:39px;scroll-margin-top:24px; }
+
+.hero::after {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -65px;
+  width: 280px;
+  height: 280px;
+  border: 1px solid #a58bff44;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 35px #a58bff0b,
+    0 0 0 75px #a58bff07;
+  pointer-events: none;
+}
+
+h1 {
+  margin: 8px 0;
+  font-size: clamp(36px, 3vw, 50px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+h1 span { color: var(--purple); }
+
+.hero p {
+  color: var(--muted);
+  font-size: 17px;
+  margin: 0;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1;
+}
+
+.status {
+  padding: 11px 14px;
+  color: var(--teal);
+  background: #122d27;
+  border: 1px solid #286d58;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.status.error {
+  color: var(--pink);
+  background: #351d29;
+  border-color: #7b3a52;
+}
+
+.primary-btn {
+  background: #6645c2;
+  color: white;
+  border: 1px solid #ab90ff;
+  border-radius: 10px;
+  padding: 11px 19px;
+  font-weight: 800;
+  transition: 0.2s;
+}
+
+.primary-btn:hover {
+  filter: brightness(1.18);
+  transform: translateY(-2px);
+}
+
+.primary-btn:disabled { opacity: 0.6; }
+
+.banner {
+  padding: 18px 21px;
+  margin: 23px 0 32px;
+  color: #d9cee8;
+  background: #21192d;
+  border: 1px solid #644b75;
+  border-radius: 13px;
+  font-size: 15px;
+}
+
+/* SECTIONS */
+
+section {
+  margin-top: 39px;
+  scroll-margin-top: 20px;
+}
+
 .section-head {
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:15px;
-  margin-bottom:20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
-.section-tag {
-  font-size:12px;
-  letter-spacing:2px;
-  color:var(--purple);
-  font-weight:850;
+
+h2 {
+  margin: 4px 0;
+  font-size: 28px;
+  letter-spacing: -0.4px;
 }
-h2 { margin:4px 0 3px;font-size:28px;letter-spacing:-.5px; }
-h3 { margin:0 0 14px;font-size:21px; }
-.desc { font-size:16px;color:var(--muted);margin:4px 0; }
+
+h3 {
+  margin: 0 0 14px;
+  font-size: 21px;
+}
+
+.desc {
+  margin: 4px 0;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 15px;
+}
+
 .pill {
-  display:inline-block;
-  color:#c5b7ff;
-  background:#2b2543;
-  border:1px solid #52416e;
-  border-radius:99px;
-  padding:7px 13px;
-  font-size:12px;
-  font-weight:850;
-  letter-spacing:.4px;
+  padding: 7px 13px;
+  color: #d5c7ff;
+  background: #302642;
+  border: 1px solid #604c7c;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 850;
 }
-.grid { display:grid;gap:19px; }
-.kpis { grid-template-columns:repeat(4,minmax(0,1fr)); }
-.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+/* CARDS */
+
+.grid {
+  display: grid;
+  gap: 19px;
+}
+
+.kpis {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .card {
-  min-width:0;
-  position:relative;
-  overflow:hidden;
-  background:linear-gradient(155deg,#17182b,#101320);
-  border:1px solid var(--border);
-  border-radius:17px;
-  padding:25px;
-  box-shadow:var(--shadow);
+  min-width: 0;
+  position: relative;
+  padding: 25px;
+  background:
+    linear-gradient(155deg, #1a182d, #111320);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 12px 35px #0005;
+  transition: 0.2s;
 }
+
 .card::before {
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  top:0;
-  height:1px;
-  background:linear-gradient(90deg,transparent,#a18bff65,transparent);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #a58bff88,
+    transparent
+  );
 }
-.card:hover { border-color:#514768;transition:border-color .2s; }
-.kpi-label { color:#b1aec8;font-size:15px;font-weight:700; }
+
+.card:hover {
+  border-color: #66517f;
+}
+
+.space { margin-top: 19px; }
+
+.kpi-label {
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 700;
+}
+
 .kpi-value {
-  font-size:clamp(24px,2.2vw,36px);
-  font-weight:850;
-  margin:13px 0 7px;
-  letter-spacing:-.8px;
-  font-variant-numeric:tabular-nums;
+  margin: 13px 0 7px;
+  font-size: clamp(25px, 2.3vw, 37px);
+  font-weight: 850;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
 }
-.kpi-sub { color:#8e8faa;font-size:13px; }
-.accent { color:var(--purple); }
-.good { color:var(--teal); }
-.bad { color:var(--red); }
-.warning { color:var(--amber); }
-.note { font-size:14px;color:var(--muted);margin-top:17px; }
-.stack { margin-top:19px; }
-.alloc-bar {
-  display:flex;
-  overflow:hidden;
-  height:17px;
-  border-radius:99px;
-  background:#2b2d44;
-  margin:24px 0 20px;
+
+.small {
+  color: var(--muted);
+  font-size: 13px;
 }
-.alloc-bar div { height:100%; }
-.legend-item,.position-item {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  padding:12px 0;
-  border-bottom:1px solid #303047;
+
+.accent { color: var(--purple); }
+.good { color: var(--teal); }
+.bad { color: var(--pink); }
+
+/* PORTFOLIO */
+
+.allocation {
+  display: flex;
+  height: 18px;
+  margin: 25px 0 19px;
+  background: #323048;
+  border-radius: 99px;
+  overflow: hidden;
 }
-.legend-left { display:flex;align-items:center;gap:11px; }
-.dot { width:11px;height:11px;border-radius:50%;flex-shrink:0; }
+
+.allocation div { height: 100%; }
+
+.legend-row,
+.position-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 16px;
+}
+
+.legend-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
 
 /* COMPARISON */
-.compare-item { margin-bottom:25px; }
-.compare-top { display:flex;justify-content:space-between;gap:10px;font-weight:750; }
-.track { height:15px;border-radius:99px;background:#2a2b40;overflow:hidden;margin-top:10px; }
-.fill { height:100%;background:linear-gradient(90deg,#4d397f,#9978ff);border-radius:99px; }
-.fill.mine { background:linear-gradient(90deg,#126c65,#2bd8b7); }
-.compare-meta { font-size:13px;color:var(--muted);margin-top:7px; }
-.compare-grid { display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,1fr);gap:19px; }
+
+.bar-item { margin-bottom: 25px; }
+
+.bar-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 17px;
+}
+
+.bar-track {
+  margin-top: 10px;
+  height: 17px;
+  border-radius: 99px;
+  background: #2e2b43;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(
+    90deg, #6543bc, #b197ff
+  );
+}
+
+.bar-fill.mine {
+  background: linear-gradient(
+    90deg, #176b62, #2bd9ad
+  );
+}
+
+.bar-sub {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 7px;
+}
 
 /* CHARTS */
-.chart { width:100%;min-height:340px;position:relative; }
-.chart svg { display:block;width:100%;height:auto;max-height:400px; }
+
+.chart {
+  min-height: 290px;
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+}
+
+.empty {
+  min-height: 220px;
+  padding: 25px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border: 1px dashed #58466d;
+  border-radius: 12px;
+  color: var(--muted);
+}
+
 .chart-legend {
-  display:flex;
-  flex-wrap:wrap;
-  gap:15px;
-  margin-top:15px;
-  color:var(--muted);
-  font-size:14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 15px;
+  color: var(--muted);
+  font-size: 15px;
 }
-.line-key { display:inline-block;width:19px;height:4px;vertical-align:middle;margin-right:7px;border-radius:4px; }
-.chart-empty {
-  display:grid;
-  place-items:center;
-  min-height:220px;
-  border:1px dashed #45415c;
-  border-radius:12px;
-  color:var(--muted);
-  padding:24px;
-  text-align:center;
-}
-.buttons { display:flex;gap:8px; }
-.buttons button {
-  background:#22223b;
-  color:#aeacc8;
-  border:1px solid #45415f;
-  border-radius:9px;
-  padding:9px 17px;
-  font-weight:800;
-}
-.buttons button.active {
-  background:var(--purple2);
-  border-color:#ad94ff;
-  color:white;
-  box-shadow:0 0 20px #7755e744;
+
+.swatch {
+  display: inline-block;
+  width: 22px;
+  height: 4px;
+  margin-right: 7px;
+  border-radius: 4px;
+  vertical-align: middle;
 }
 
 /* TABLES */
-.table-wrap { overflow-x:auto; }
-table { width:100%;border-collapse:collapse;font-size:15px; }
+
+.scroll { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
 th {
-  color:#9f9bb9;
-  text-transform:uppercase;
-  font-size:12px;
-  letter-spacing:.5px;
-  text-align:left;
-  padding:14px 12px;
-  border-bottom:1px solid #3a3851;
-  white-space:nowrap;
+  padding: 14px 12px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-bottom: 1px solid #443950;
 }
+
 td {
-  padding:15px 12px;
-  border-bottom:1px solid #292d41;
-  font-variant-numeric:tabular-nums;
+  padding: 15px 12px;
+  border-bottom: 1px solid #302d41;
+  font-variant-numeric: tabular-nums;
 }
-tbody tr:hover { background:#ffffff06; }
-.right { text-align:right; }
-.signal {
-  display:inline-block;
-  border-radius:8px;
-  padding:5px 10px;
-  font-size:12px;
-  font-weight:850;
+
+.right { text-align: right; }
+
+tbody tr:hover { background: #ffffff07; }
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #2e2a42;
+  color: #cfc5e0;
+  font-size: 12px;
+  font-weight: 850;
 }
-.signal.buy { color:var(--teal);background:#123c35;border:1px solid #246b58; }
-.signal.sell { color:var(--red);background:#3b1e2e;border:1px solid #6c3448; }
-.signal.hold { color:#b9abc9;background:#29243b;border:1px solid #4d4165; }
-.signal-item {
-  display:grid;
-  grid-template-columns:65px 90px 90px 1fr;
-  align-items:center;
-  gap:13px;
-  padding:15px 0;
-  border-bottom:1px solid #302d46;
+
+.badge.buy {
+  color: var(--teal);
+  background: #123b33;
 }
+
+.badge.sell {
+  color: var(--pink);
+  background: #402030;
+}
+
+.badge.hold {
+  color: #cec1e0;
+  background: #30283e;
+}
+
+/* SIGNALS */
+
+.switcher {
+  display: flex;
+  gap: 9px;
+}
+
+.switcher button {
+  padding: 9px 17px;
+  border-radius: 10px;
+  background: #29233c;
+  border: 1px solid #55446a;
+  color: #d0c2e0;
+  font-weight: 850;
+}
+
+.switcher button.active {
+  background: #6949c6;
+  border-color: #b49aff;
+  color: white;
+}
+
+.signal-row {
+  display: grid;
+  grid-template-columns: 65px 85px 100px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
 .rule {
-  margin:15px 0;
-  padding:13px 15px;
-  background:#1a1a2e;
-  border:1px solid #33314c;
-  border-radius:11px;
+  padding: 14px;
+  margin: 12px 0;
+  background: #201d30;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  font-size: 15px;
 }
-.rule .signal { margin-right:9px; }
-.risk-tiles { display:grid;grid-template-columns:repeat(3,1fr);gap:12px; }
-.risk-tile {
-  padding:19px;
-  background:#1b1b32;
-  border-radius:12px;
-  border:1px solid #34334c;
+
+.rule .badge { margin-right: 9px; }
+
+/* RISK */
+
+.risk-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
-.risk-tile span { display:block;font-size:13px;color:var(--muted); }
-.risk-tile strong { display:block;font-size:25px;margin-top:9px; }
+
+.risk-cell {
+  padding: 19px;
+  border-radius: 12px;
+  background: #211d34;
+  border: 1px solid #453b58;
+}
+
+.risk-cell span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.risk-cell strong {
+  display: block;
+  margin-top: 9px;
+  font-size: 25px;
+}
+
+/* PRESENTATION */
+
+.presentation-list {
+  margin: 0;
+  padding-left: 24px;
+  color: #ded6ec;
+}
+
+.presentation-list li {
+  margin: 13px 0;
+}
+
 footer {
-  color:#8989a4;
-  font-size:13px;
-  padding:26px 0;
-  margin-top:50px;
-  border-top:1px solid var(--border);
+  margin-top: 50px;
+  padding: 25px 0;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  font-size: 13px;
 }
-@media(max-width:1250px) {
-  .kpis { grid-template-columns:repeat(2,1fr); }
-  .compare-grid { grid-template-columns:1fr; }
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .two {
+    grid-template-columns: 1fr;
+  }
 }
-@media(max-width:980px) {
-  .app { display:block; }
-  .sidebar { position:static;height:auto;padding:16px; }
-  .logo { margin-bottom:15px; }
-  .nav-caption,.side-bottom { display:none; }
-  nav { display:flex;overflow-x:auto;gap:5px; }
-  nav a { white-space:nowrap;padding:10px 12px; }
-  main { padding:25px 18px; }
+
+@media (max-width: 850px) {
+  .shell { display: block; }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    padding: 17px;
+  }
+
+  .brand { margin-bottom: 17px; }
+  .nav-label, .side-footer { display: none; }
+
+  nav {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  nav a {
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  main { padding: 24px 17px; }
 }
-@media(max-width:650px) {
-  .kpis,.two,.risk-tiles { grid-template-columns:1fr; }
-  .hero { padding:23px; }
-  .card { padding:19px; }
-  h2 { font-size:24px; }
-  .signal-item { grid-template-columns:48px 75px 1fr; }
-  .signal-item small { grid-column:2 / -1; }
+
+@media (max-width: 650px) {
+  .kpis, .risk-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card { padding: 20px; }
+  .hero { padding: 23px; }
+  h2 { font-size: 24px; }
+
+  .signal-row {
+    grid-template-columns: 45px 75px 1fr;
+  }
+
+  .signal-row small {
+    grid-column: 2 / -1;
+  }
 }
-@media(prefers-reduced-motion:reduce) {
-  *,*::before,*::after { transition:none!important;animation:none!important; }
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 </style>
 </head>
 
 <body>
-<div class="app">
+
+<div class="shell">
 
 <aside class="sidebar">
-  <div class="logo">
-    <div class="logo-icon">E.</div>
+  <div class="brand">
+    <div class="brand-icon">E.</div>
     <div>
       <strong>ENSIM Trader</strong>
-      <small>TRADE TERMINAL / V2</small>
+      <small>TRADE TERMINAL / FINAL</small>
     </div>
   </div>
 
-  <div class="nav-caption">NAVIGATION</div>
+  <div class="nav-label">NAVIGATION</div>
+
   <nav>
-    <a href="#overview" class="active"><span class="nav-icon">◈</span>Overview</a>
-    <a href="#portfolio"><span class="nav-icon">◉</span>Portefeuille</a>
-    <a href="#comparison"><span class="nav-icon">▤</span>Comparaison</a>
-    <a href="#performance"><span class="nav-icon">⌁</span>Performance</a>
-    <a href="#market"><span class="nav-icon">▥</span>Marché</a>
-    <a href="#strategy"><span class="nav-icon">◇</span>Stratégie</a>
-    <a href="#risk"><span class="nav-icon">△</span>Risques</a>
+    <a href="#overview" class="active">◈ Vue d'ensemble</a>
+    <a href="#portfolio">◉ Portefeuille</a>
+    <a href="#comparison">▤ Comparaison</a>
+    <a href="#performance">⌁ Performance</a>
+    <a href="#market">▥ Marché</a>
+    <a href="#strategy">◇ Stratégie</a>
+    <a href="#risk">△ Risques</a>
+    <a href="#presentation">✦ Présentation</a>
   </nav>
 
-  <div class="side-bottom">
-    <strong>ENSIM TRADE CENTER</strong>
-    <small>Business Intelligence · TP2</small>
-    <small>Simulation pédagogique</small>
+  <div class="side-footer">
+    ENSIM Trade Center
+    <p>Business Intelligence — TP2</p>
+    Dashboard d'aide à la décision
   </div>
 </aside>
 
 <main>
 
-  <header class="hero" id="overview">
-    <div>
-      <div class="eyebrow">ENSIM / MARKET INTELLIGENCE</div>
-      <h1>Trade Terminal<span class="accent">.</span></h1>
-      <p>Surveillance du marché, analyse des stratégies et performance.</p>
+<header class="hero" id="overview">
+  <div>
+    <div class="overline">
+      ENSIM / MARKET INTELLIGENCE
     </div>
-    <div class="hero-actions">
-      <div id="status" class="connection">● Connexion...</div>
-      <button id="refresh" class="refresh">↻ Actualiser</button>
-    </div>
-  </header>
-
-  <div class="notice">
-    <strong>MODE ANALYSE —</strong>
-    Les données de portefeuille proviennent du simulateur ENSIM.
-    Les signaux BUY / SELL / HOLD sont calculés localement.
-    Aucun ordre n'est envoyé depuis ce dashboard.
+    <h1>Trade Terminal<span>.</span></h1>
+    <p>
+      Stratégie, signaux et performances
+      du simulateur ENSIM.
+    </p>
   </div>
 
-  <!-- PORTFOLIO -->
-  <section id="portfolio">
-    <div class="section-head">
-      <div>
-        <div class="section-tag">01 / ASSETS</div>
-        <h2>Mon portefeuille</h2>
-        <p class="desc">Valorisation officielle selon les derniers prix du marché.</p>
-      </div>
-      <span class="pill" id="observation-count">— observations</span>
-    </div>
+  <div class="hero-actions">
+    <span id="status" class="status">
+      ● Chargement...
+    </span>
+    <button id="refresh" class="primary-btn">
+      ↻ Actualiser
+    </button>
+  </div>
+</header>
 
-    <div class="grid kpis">
-      <article class="card">
-        <div class="kpi-label">Valeur totale</div>
-        <div class="kpi-value" id="total-value">—</div>
-        <div class="kpi-sub">Liquidités + actifs</div>
-      </article>
-      <article class="card">
-        <div class="kpi-label">Liquidités</div>
-        <div class="kpi-value" id="cash-value">—</div>
-        <div class="kpi-sub">Solde disponible</div>
-      </article>
-      <article class="card">
-        <div class="kpi-label">Valeur des actifs</div>
-        <div class="kpi-value" id="assets-value">—</div>
-        <div class="kpi-sub">Positions A / B / C</div>
-      </article>
-      <article class="card">
-        <div class="kpi-label">Part des liquidités</div>
-        <div class="kpi-value accent" id="cash-percent">—</div>
-        <div class="kpi-sub">Exposition actuelle</div>
-      </article>
-    </div>
+<div class="banner">
+  <strong>MODE ANALYSE.</strong>
+  Données officielles ENSIM. Les recommandations
+  sont calculées localement. Aucun ordre n'est
+  envoyé depuis ce dashboard.
+</div>
 
-    <div class="grid two stack">
-      <article class="card">
-        <h3>Allocation des actifs</h3>
-        <p class="desc">Répartition de la valeur totale.</p>
-        <div id="allocation" class="alloc-bar"></div>
-        <div id="allocation-legend"></div>
-      </article>
-      <article class="card">
-        <h3>Positions détenues</h3>
-        <div id="positions">Chargement...</div>
-      </article>
-    </div>
-  </section>
+<!-- PORTFOLIO -->
 
-  <!-- COMPARISON -->
-  <section id="comparison">
-    <div class="section-head">
-      <div>
-        <div class="section-tag">02 / BENCHMARK</div>
-        <h2>Comparaison des traders</h2>
-        <p class="desc">Valeur actuelle face aux trois références ENSIM.</p>
-      </div>
-      <span class="pill">SNAPSHOT</span>
-    </div>
-
-    <div class="compare-grid">
-      <article class="card">
-        <h3>Classement par valeur</h3>
-        <div id="comparison-bars">Chargement...</div>
-        <p id="comparison-date" class="note"></p>
-      </article>
-      <article class="card">
-        <h3>Lecture des résultats</h3>
-        <p class="desc">
-          Les valeurs tiennent compte des liquidités et des quantités
-          détenues, multipliées par les prix du dernier relevé.
-        </p>
-        <div class="rule">
-          <strong>Mon trader</strong> : positions du portefeuille Aziz.
-        </div>
-        <div class="rule">
-          <strong>Random Trader / Buyer / Seller</strong> :
-          portefeuilles de référence de l'organisateur.
-        </div>
-        <p class="note">
-          Ce classement n'est pas un classement de rendement.
-          L'instantané peut être moins récent que les prix live.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <!-- PERFORMANCE -->
-  <section id="performance">
-    <div class="section-head">
-      <div>
-        <div class="section-tag">03 / PERFORMANCE</div>
-        <h2>Performance historique</h2>
-        <p class="desc">Évolution des quatre portefeuilles depuis le premier relevé.</p>
-      </div>
-      <span class="pill" id="snapshot-count">— relevés</span>
-    </div>
-
-    <article class="card">
-      <h3>Évolution de la valeur</h3>
-      <div id="performance-chart" class="chart">
-        <div class="chart-empty">Chargement de l'historique...</div>
-      </div>
-      <div id="performance-legend" class="chart-legend"></div>
-      <p class="note" id="performance-period"></p>
-    </article>
-
-    <article class="card stack">
-      <h3>Rendement et risque par trader</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Trader</th>
-              <th class="right">Début</th>
-              <th class="right">Fin</th>
-              <th class="right">Rendement</th>
-              <th class="right">Drawdown max.</th>
-              <th class="right">Volatilité</th>
-            </tr>
-          </thead>
-          <tbody id="performance-table"></tbody>
-        </table>
-      </div>
-      <p class="note">
-        Rendement observé depuis le premier snapshot.
-        Volatilité des variations entre relevés, non annualisée.
-        Ces mesures ne reconstituent pas les transactions antérieures.
-      </p>
-    </article>
-  </section>
-
-  <!-- MARKET -->
-  <section id="market">
-    <div class="section-head">
-      <div>
-        <div class="section-tag">04 / MARKET DATA</div>
-        <h2>Marché et tendances</h2>
-        <p class="desc">Analyse technique des produits A, B et C.</p>
-      </div>
-      <div class="buttons">
-        <button class="active" data-product="A">A</button>
-        <button data-product="B">B</button>
-        <button data-product="C">C</button>
-      </div>
-    </div>
-
-    <article class="card">
-      <h3 id="market-heading">Produit A — Évolution des prix</h3>
-      <p id="market-summary" class="desc">Chargement...</p>
-      <div id="market-chart" class="chart"></div>
-      <div class="chart-legend">
-        <span><i class="line-key" style="background:#aa8bff"></i>Prix</span>
-        <span><i class="line-key" style="background:#2bd8b7"></i>MM5</span>
-        <span><i class="line-key" style="background:#ffca78"></i>MM12</span>
-        <span><i class="line-key" style="background:#ff6d8e"></i>MM30</span>
-      </div>
-    </article>
-
-    <article class="card stack">
-      <h3>Indicateurs techniques</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Produit</th>
-              <th class="right">Prix</th>
-              <th class="right">MM5</th>
-              <th class="right">MM12</th>
-              <th class="right">MM30</th>
-              <th>Signal brut</th>
-            </tr>
-          </thead>
-          <tbody id="market-table"></tbody>
-        </table>
-      </div>
-    </article>
-  </section>
-
-  <!-- STRATEGY -->
-  <section id="strategy">
-    <div class="section-head">
-      <div>
-        <div class="section-tag">05 / ALGORITHM</div>
-        <h2>Stratégie de trading</h2>
-        <p class="desc">Recommandations et mécanisme de décision.</p>
-      </div>
-      <span class="pill">MM5 / MM12 / MM30</span>
-    </div>
-
-    <div class="grid two">
-      <article class="card">
-        <h3>Signaux sécurisés actuels</h3>
-        <div id="current-signals">Chargement...</div>
-        <p class="note" id="simulated-cash"></p>
-        <p class="note">
-          Achat plafonné à 20 % des liquidités restantes,
-          réserve minimale de 50, vente limitée aux positions détenues.
-        </p>
-      </article>
-      <article class="card">
-        <h3>Logique de l'algorithme</h3>
-        <div class="rule">
-          <span class="signal buy">BUY</span>
-          MM5 supérieure à MM12 de plus de 1 % et prix supérieur à MM30.
-        </div>
-        <div class="rule">
-          <span class="signal sell">SELL</span>
-          MM5 inférieure à MM12 de plus de 1 %, ou prix inférieur à MM30.
-        </div>
-        <div class="rule">
-          <span class="signal hold">HOLD</span>
-          Absence de condition claire, ou historique insuffisant.
-        </div>
-        <p class="note">30 observations minimum avant la première décision.</p>
-      </article>
-    </div>
-
-    <article class="card stack">
-      <h3>Journal des signaux reconstruits</h3>
+<section id="portfolio">
+  <div class="section-head">
+    <div>
+      <div class="overline">01 / ASSETS</div>
+      <h2>Mon portefeuille</h2>
       <p class="desc">
-        Les 12 dernières observations du marché,
-        analysées avec la stratégie MM5 / MM12 / MM30.
+        Valeur actuelle, positions et allocation.
       </p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Observation</th>
-              <th>A</th>
-              <th>B</th>
-              <th>C</th>
-            </tr>
-          </thead>
-          <tbody id="signal-history"></tbody>
-        </table>
+    </div>
+    <span class="pill" id="market-count">— observations</span>
+  </div>
+
+  <div class="grid kpis">
+    <article class="card">
+      <div class="kpi-label">Valeur totale</div>
+      <div class="kpi-value" id="total">—</div>
+      <div class="small">Liquidités + actifs</div>
+    </article>
+
+    <article class="card">
+      <div class="kpi-label">Liquidités</div>
+      <div class="kpi-value" id="cash">—</div>
+      <div class="small">Solde officiel</div>
+    </article>
+
+    <article class="card">
+      <div class="kpi-label">Valeur des actifs</div>
+      <div class="kpi-value" id="assets">—</div>
+      <div class="small">Positions A / B / C</div>
+    </article>
+
+    <article class="card">
+      <div class="kpi-label">Part des liquidités</div>
+      <div class="kpi-value accent" id="cash-pct">—</div>
+      <div class="small">Allocation actuelle</div>
+    </article>
+  </div>
+
+  <div class="grid two space">
+    <article class="card">
+      <h3>Allocation des actifs</h3>
+      <div class="allocation" id="allocation"></div>
+      <div id="allocation-legend"></div>
+    </article>
+
+    <article class="card">
+      <h3>Positions officielles</h3>
+      <div id="positions">Chargement...</div>
+    </article>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+
+<section id="comparison">
+  <div class="section-head">
+    <div>
+      <div class="overline">02 / BENCHMARK</div>
+      <h2>Comparaison des traders</h2>
+      <p class="desc">
+        Valeur actuelle face aux références ENSIM.
+      </p>
+    </div>
+    <span class="pill">INSTANTANÉ</span>
+  </div>
+
+  <div class="grid two">
+    <article class="card">
+      <h3>Classement actuel</h3>
+      <div id="comparison-bars">Chargement...</div>
+      <p class="note" id="comparison-status"></p>
+    </article>
+
+    <article class="card">
+      <h3>Analyse du classement</h3>
+      <div class="rule" id="leader-insight">
+        Calcul en cours...
+      </div>
+      <div class="rule" id="margin-insight">
+        Comparaison en cours...
       </div>
       <p class="note">
-        Il ne s'agit ni d'ordres exécutés, ni du journal privé
-        output/decision_log.jsonl.
+        Les valeurs proviennent du dernier instantané
+        publié. Ce classement n'est pas un classement
+        des rendements historiques.
       </p>
     </article>
-  </section>
+  </div>
+</section>
 
-  <!-- RISK -->
-  <section id="risk">
-    <div class="section-head">
-      <div>
-        <div class="section-tag">06 / RISK ANALYSIS</div>
-        <h2>Analyse des risques</h2>
-        <p class="desc">Risques du marché et limites de la simulation.</p>
+<!-- PERFORMANCE -->
+
+<section id="performance">
+  <div class="section-head">
+    <div>
+      <div class="overline">03 / PERFORMANCE</div>
+      <h2>Performance historique</h2>
+      <p class="desc">
+        Rendement, volatilité et drawdown
+        sur la période observée.
+      </p>
+    </div>
+    <span class="pill" id="snapshot-count">— relevés</span>
+  </div>
+
+  <article class="card">
+    <h3>Évolution des quatre portefeuilles</h3>
+    <div class="chart" id="performance-chart">
+      <div class="empty">Chargement...</div>
+    </div>
+    <div id="performance-legend" class="chart-legend"></div>
+    <p id="performance-note" class="note"></p>
+  </article>
+
+  <article class="card space">
+    <h3>Indicateurs comparatifs</h3>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Trader</th>
+            <th class="right">Début</th>
+            <th class="right">Fin</th>
+            <th class="right">Rendement</th>
+            <th class="right">Drawdown max.</th>
+            <th class="right">Volatilité</th>
+          </tr>
+        </thead>
+        <tbody id="performance-table"></tbody>
+      </table>
+    </div>
+
+    <p class="note">
+      Rendement depuis le premier relevé disponible.
+      Volatilité non annualisée. Les transactions
+      antérieures ne sont pas reconstruites.
+    </p>
+  </article>
+</section>
+
+<!-- MARKET -->
+
+<section id="market">
+  <div class="section-head">
+    <div>
+      <div class="overline">04 / MARKET DATA</div>
+      <h2>Marché et tendances</h2>
+      <p class="desc">
+        Prix et moyennes mobiles MM5, MM12, MM30.
+      </p>
+    </div>
+
+    <div class="switcher">
+      <button data-product="A" class="active">A</button>
+      <button data-product="B">B</button>
+      <button data-product="C">C</button>
+    </div>
+  </div>
+
+  <article class="card">
+    <h3 id="chart-title">Produit A — Prix</h3>
+    <p id="chart-subtitle" class="desc"></p>
+    <div id="price-chart" class="chart"></div>
+    <div class="chart-legend">
+      <span>
+        <i class="swatch" style="background:#ba9aff"></i>Prix
+      </span>
+      <span>
+        <i class="swatch" style="background:#29d9ad"></i>MM5
+      </span>
+      <span>
+        <i class="swatch" style="background:#f7bf71"></i>MM12
+      </span>
+      <span>
+        <i class="swatch" style="background:#ff7796"></i>MM30
+      </span>
+    </div>
+  </article>
+
+  <article class="card space">
+    <h3>Indicateurs techniques</h3>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Produit</th>
+            <th class="right">Prix</th>
+            <th class="right">MM5</th>
+            <th class="right">MM12</th>
+            <th class="right">MM30</th>
+            <th>Signal brut</th>
+            <th>Justification</th>
+          </tr>
+        </thead>
+        <tbody id="market-table"></tbody>
+      </table>
+    </div>
+  </article>
+</section>
+
+<!-- STRATEGY -->
+
+<section id="strategy">
+  <div class="section-head">
+    <div>
+      <div class="overline">05 / ALGORITHM</div>
+      <h2>Stratégie de trading</h2>
+      <p class="desc">
+        Recommandations sécurisées et décisions publiées.
+      </p>
+    </div>
+    <span class="pill">MM5 / MM12 / MM30</span>
+  </div>
+
+  <div class="grid two">
+    <article class="card">
+      <h3>Signaux simulés actuels</h3>
+      <div id="signals"></div>
+      <p id="simulation-cash" class="note"></p>
+      <p class="note">
+        Achat plafonné à 20 % des liquidités,
+        réserve minimale de 50,
+        vente limitée aux quantités détenues.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3>Règles de décision</h3>
+      <div class="rule">
+        <span class="badge buy">BUY</span>
+        MM5 supérieure à MM12 de plus de 1 %
+        et prix supérieur à MM30.
       </div>
-    </div>
+      <div class="rule">
+        <span class="badge sell">SELL</span>
+        MM5 inférieure à MM12 de plus de 1 %
+        ou prix inférieur à MM30.
+      </div>
+      <div class="rule">
+        <span class="badge hold">HOLD</span>
+        Aucune condition ou moins de
+        30 observations disponibles.
+      </div>
+    </article>
+  </div>
 
-    <div class="grid two">
-      <article class="card">
-        <h3>Produit <span id="risk-product">A</span></h3>
-        <div class="risk-tiles">
-          <div class="risk-tile">
-            <span>Volatilité</span>
-            <strong id="price-volatility">—</strong>
-          </div>
-          <div class="risk-tile">
-            <span>Drawdown max.</span>
-            <strong id="price-drawdown">—</strong>
-          </div>
-          <div class="risk-tile">
-            <span>Variation totale</span>
-            <strong id="price-return">—</strong>
-          </div>
+  <article class="card space">
+    <h3>Décisions publiées dans decision.json</h3>
+    <div id="official-decisions">Chargement...</div>
+    <p id="official-note" class="note"></p>
+  </article>
+
+  <article class="card space">
+    <h3>Historique récent des signaux</h3>
+    <p class="desc">
+      Recalculés sur les 12 dernières observations.
+    </p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Observation</th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+          </tr>
+        </thead>
+        <tbody id="signal-history"></tbody>
+      </table>
+    </div>
+    <p class="note">
+      Les signaux reconstruits ne sont pas
+      des transactions exécutées.
+    </p>
+  </article>
+</section>
+
+<!-- RISK -->
+
+<section id="risk">
+  <div class="section-head">
+    <div>
+      <div class="overline">06 / RISK ANALYSIS</div>
+      <h2>Analyse des risques</h2>
+      <p class="desc">
+        Mesures de risque des produits du marché.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid two">
+    <article class="card">
+      <h3>Produit <span id="risk-product">A</span></h3>
+
+      <div class="risk-grid">
+        <div class="risk-cell">
+          <span>Volatilité</span>
+          <strong id="price-vol">—</strong>
         </div>
-        <p class="note">
-          Ces indicateurs portent sur le prix du produit sélectionné,
-          pas sur la valeur totale du portefeuille.
-        </p>
-      </article>
+        <div class="risk-cell">
+          <span>Drawdown</span>
+          <strong id="price-dd">—</strong>
+        </div>
+        <div class="risk-cell">
+          <span>Variation</span>
+          <strong id="price-return">—</strong>
+        </div>
+      </div>
 
-      <article class="card">
-        <h3>Gestion du risque</h3>
-        <div class="rule">◈ Réserve de liquidités : <strong>50 minimum</strong></div>
-        <div class="rule">◈ Budget par achat : <strong>20 % maximum</strong></div>
-        <div class="rule">◈ Vente : <strong>quantités détenues uniquement</strong></div>
-        <div class="rule">◈ Signal ENSIM : <strong>de −1 à +1</strong></div>
-        <p class="note">
-          Les protections sont appliquées à des décisions simulées.
-          Elles ne garantissent ni profit ni stabilité du portefeuille.
-        </p>
-      </article>
+      <p class="note">
+        Ces mesures concernent le prix du produit
+        sélectionné, pas le portefeuille global.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3>Protections de l'algorithme</h3>
+      <div class="rule">Réserve minimale : <strong>50</strong></div>
+      <div class="rule">Budget d'achat : <strong>20 % maximum</strong></div>
+      <div class="rule">Vente limitée aux positions possédées</div>
+      <div class="rule">Amplitude du signal : <strong>−1 à +1</strong></div>
+    </article>
+  </div>
+</section>
+
+<!-- PRESENTATION -->
+
+<section id="presentation">
+  <div class="section-head">
+    <div>
+      <div class="overline">07 / DEMONSTRATION</div>
+      <h2>Présentation du projet</h2>
+      <p class="desc">
+        Les points à expliquer pendant la démonstration.
+      </p>
     </div>
-  </section>
+    <span class="pill">TP2 ENSIM</span>
+  </div>
 
-  <footer>
-    ENSIM TRADE TERMINAL · TP2 Business Intelligence ·
-    Données pédagogiques du simulateur ENSIM ·
-    Aucun ordre passé depuis cette interface.
-  </footer>
+  <article class="card">
+    <ol class="presentation-list">
+      <li>
+        <strong>Objectif :</strong>
+        prendre des décisions de trading sur trois
+        produits fictifs A, B et C.
+      </li>
+      <li>
+        <strong>Données :</strong>
+        récupérer le marché et les portefeuilles
+        depuis le dépôt de l'organisateur.
+      </li>
+      <li>
+        <strong>Algorithme :</strong>
+        comparer MM5 et MM12 avec le filtre MM30.
+      </li>
+      <li>
+        <strong>Sécurité :</strong>
+        limiter le budget d'achat et les ventes.
+      </li>
+      <li>
+        <strong>Dashboard :</strong>
+        comparer notre portefeuille aux stratégies
+        Random Trader, Buyer et Seller.
+      </li>
+      <li>
+        <strong>Analyse :</strong>
+        distinguer valeur actuelle, rendement,
+        volatilité et drawdown.
+      </li>
+      <li>
+        <strong>Limite :</strong>
+        l'historique commence à la date du premier
+        relevé disponible.
+      </li>
+    </ol>
+  </article>
+</section>
+
+<footer>
+  ENSIM TRADE TERMINAL — TP2 Business Intelligence.
+  Dashboard pédagogique d'aide à la décision.
+</footer>
 
 </main>
 </div>
@@ -782,172 +1169,248 @@ footer {
 <script>
 "use strict";
 
-/* ============================================
-   CONFIGURATION
-============================================ */
+// ==========================================
+// CONFIGURATION
+// ==========================================
 
 const ROOT =
   "https://raw.githubusercontent.com/" +
   "exofri/ensim-trade-center/main/";
 
+const DECISION_URL =
+  "https://raw.githubusercontent.com/" +
+  "mohamedazizbhs/ensim-trader-aziz/main/decision.json";
+
 const PRODUCTS = ["A", "B", "C"];
 
 const TRADERS = [
-  {id:"aziz",name:"Mon trader",color:"#2bd8b7"},
-  {id:"random_trader",name:"Random Trader",color:"#9778ff"},
-  {id:"random_buyer",name:"Random Buyer",color:"#ffca78"},
-  {id:"random_seller",name:"Random Seller",color:"#ff6d8e"}
+  {
+    id: "aziz",
+    name: "Mon trader",
+    color: "#29d9ad"
+  },
+  {
+    id: "random_trader",
+    name: "Random Trader",
+    color: "#a58bff"
+  },
+  {
+    id: "random_buyer",
+    name: "Random Buyer",
+    color: "#f7bf71"
+  },
+  {
+    id: "random_seller",
+    name: "Random Seller",
+    color: "#ff7796"
+  }
 ];
 
-const ASSET_COLORS = {
-  cash:"#72738d",
-  A:"#9778ff",
-  B:"#2bd8b7",
-  C:"#ffca78"
+const COLORS = {
+  cash: "#78738f",
+  A: "#a58bff",
+  B: "#29d9ad",
+  C: "#f7bf71"
 };
 
 const state = {
-  market:null,
-  holdings:null,
-  selected:"A"
+  market: null,
+  holdings: null,
+  product: "A"
 };
 
 const $ = id => document.getElementById(id);
 
-function number(value,decimals=2) {
-  return Number(value).toLocaleString("fr-FR",{
-    minimumFractionDigits:decimals,
-    maximumFractionDigits:decimals
+function fmt(value, digits = 2) {
+  return Number(value).toLocaleString("fr-FR", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
   });
 }
 
 function pct(value) {
   return Number.isFinite(value)
-    ? number(value*100,2)+" %"
+    ? fmt(value * 100) + " %"
     : "—";
 }
 
-function dateText(value) {
+function formatDate(value) {
   const d = new Date(value);
+
   return Number.isNaN(d.getTime())
     ? "Date inconnue"
     : d.toLocaleString("fr-FR");
 }
 
-async function fetchJSON(url) {
-  const res = await fetch(url,{cache:"no-store"});
-  if(!res.ok) throw new Error("HTTP "+res.status);
-  return res.json();
+async function getJSON(url) {
+  const response = await fetch(url, {
+    cache: "no-store"
+  });
+
+  if (!response.ok) {
+    throw new Error("HTTP " + response.status);
+  }
+
+  return response.json();
 }
 
-/* ============================================
-   MARKET SERIES & STRATEGY
-============================================ */
+function text(id, value) {
+  $(id).textContent = value;
+}
 
-function pricesOf(product) {
+// ==========================================
+// STRATEGY
+// ==========================================
+
+function priceSeries(product) {
   return state.market.history
-    .map(row => row[product]==null
-      ? NaN
-      : Number(row[product]))
+    .map(row => (
+      row[product] == null
+        ? NaN
+        : Number(row[product])
+    ))
     .filter(Number.isFinite);
 }
 
-function movingAverage(values,window) {
-  const output=[];
-  let sum=0;
+function lastAverage(values, window) {
+  if (values.length < window) {
+    return null;
+  }
 
-  for(let i=0;i<values.length;i++) {
-    sum+=values[i];
+  const slice = values.slice(-window);
 
-    if(i>=window) {
-      sum-=values[i-window];
+  return slice.reduce((a, b) => a + b, 0) / window;
+}
+
+function movingAverage(values, window) {
+  const result = [];
+  let sum = 0;
+
+  for (let i = 0; i < values.length; i++) {
+    sum += values[i];
+
+    if (i >= window) {
+      sum -= values[i - window];
     }
 
-    output.push(
-      i>=window-1 ? sum/window : null
+    result.push(
+      i >= window - 1
+        ? sum / window
+        : null
     );
   }
 
-  return output;
+  return result;
 }
 
-function averageLast(prices,window) {
-  if(prices.length<window) return null;
+function rawSignal(prices) {
+  if (prices.length < 30) {
+    return 0;
+  }
 
-  return prices.slice(-window)
-    .reduce((a,b)=>a+b,0)/window;
-}
+  const mm5 = lastAverage(prices, 5);
+  const mm12 = lastAverage(prices, 12);
+  const mm30 = lastAverage(prices, 30);
 
-function computeSignal(prices) {
-  if(prices.length<30) return 0;
+  if (mm12 <= 0 || mm30 <= 0) {
+    return 0;
+  }
 
-  const m5=averageLast(prices,5);
-  const m12=averageLast(prices,12);
-  const m30=averageLast(prices,30);
-  const price=prices.at(-1);
+  const current = prices.at(-1);
+  const difference = (mm5 - mm12) / mm12;
 
-  if(m12<=0 || m30<=0) return 0;
+  if (
+    difference > 0.01 &&
+    current > mm30
+  ) {
+    return 0.5;
+  }
 
-  const diff=(m5-m12)/m12;
-
-  if(diff>0.01 && price>m30) return 0.5;
-  if(diff< -0.01 || price<m30) return -0.5;
+  if (
+    difference < -0.01 ||
+    current < mm30
+  ) {
+    return -0.5;
+  }
 
   return 0;
 }
 
-function secureSignal(signal,price,cash,quantity) {
-  if(
-    ![signal,price,cash,quantity].every(Number.isFinite) ||
-    price<=0
-  ) return 0;
+function signalReason(prices) {
+  if (prices.length < 30) {
+    return "Historique insuffisant";
+  }
 
-  if(signal>0) {
-    const budget=Math.min(
-      Math.max(0,cash-50),
-      Math.max(0,cash)*0.20
+  const signal = rawSignal(prices);
+
+  if (signal > 0) {
+    return "Tendance haussière confirmée";
+  }
+
+  if (signal < 0) {
+    return "Tendance baissière ou rupture MM30";
+  }
+
+  return "Signal neutre";
+}
+
+function secureSignal(signal, price, cash, quantity) {
+  if (
+    ![signal, price, cash, quantity].every(Number.isFinite) ||
+    price <= 0
+  ) {
+    return 0;
+  }
+
+  if (signal > 0) {
+    const budget = Math.min(
+      Math.max(0, cash - 50),
+      Math.max(0, cash) * 0.20
     );
 
-    const allowed=Math.min(signal*100,budget/price);
+    const units = Math.min(
+      signal * 100,
+      budget / price
+    );
 
     return Math.max(
       0,
-      Math.floor(allowed/100*1000+1e-9)/1000
+      Math.floor(units / 100 * 1000 + 1e-9) / 1000
     );
   }
 
-  if(signal<0) {
-    const allowed=Math.min(
-      Math.abs(signal)*100,
-      Math.max(0,quantity)
+  if (signal < 0) {
+    const units = Math.min(
+      Math.abs(signal) * 100,
+      Math.max(0, quantity)
     );
 
     return -Math.max(
       0,
-      Math.floor(allowed/100*1000+1e-9)/1000
+      Math.floor(units / 100 * 1000 + 1e-9) / 1000
     );
   }
 
   return 0;
 }
 
-/* ============================================
-   RISK FUNCTIONS
-============================================ */
+// ==========================================
+// STATISTICS
+// ==========================================
 
 function returnsOf(values) {
-  const returns=[];
+  const returns = [];
 
-  for(let i=1;i<values.length;i++) {
-    const a=values[i-1];
-    const b=values[i];
+  for (let i = 1; i < values.length; i++) {
+    const previous = values[i - 1];
+    const current = values[i];
 
-    if(
-      Number.isFinite(a) &&
-      Number.isFinite(b) &&
-      a>0
+    if (
+      Number.isFinite(previous) &&
+      Number.isFinite(current) &&
+      previous > 0
     ) {
-      returns.push(b/a-1);
+      returns.push(current / previous - 1);
     }
   }
 
@@ -955,727 +1418,1002 @@ function returnsOf(values) {
 }
 
 function volatility(values) {
-  const r=returnsOf(values);
+  const returns = returnsOf(values);
 
-  if(r.length<2) return null;
+  if (returns.length < 2) {
+    return null;
+  }
 
-  const mean=r.reduce((a,b)=>a+b,0)/r.length;
+  const mean = returns.reduce(
+    (sum, x) => sum + x, 0
+  ) / returns.length;
 
-  const variance=r.reduce(
-    (s,v)=>s+(v-mean)**2,0
-  )/(r.length-1);
+  const variance = returns.reduce(
+    (sum, x) => sum + (x - mean) ** 2,
+    0
+  ) / (returns.length - 1);
 
   return Math.sqrt(variance);
 }
 
 function maxDrawdown(values) {
-  if(values.length<2) return null;
+  if (values.length < 2) {
+    return null;
+  }
 
-  let peak=-Infinity;
-  let worst=0;
+  let peak = -Infinity;
+  let maximum = 0;
 
-  for(const value of values) {
-    if(!Number.isFinite(value) || value<=0) {
+  for (const value of values) {
+    if (!Number.isFinite(value) || value <= 0) {
       continue;
     }
 
-    peak=Math.max(peak,value);
-    worst=Math.max(worst,(peak-value)/peak);
+    peak = Math.max(peak, value);
+
+    maximum = Math.max(
+      maximum,
+      (peak - value) / peak
+    );
   }
 
-  return Number.isFinite(peak) ? worst : null;
+  return Number.isFinite(peak) ? maximum : null;
 }
 
-/* ============================================
-   CHART RENDERER
-============================================ */
+// ==========================================
+// UI HELPERS
+// ==========================================
 
-function drawLineChart(elementId,series,labelsCount) {
-  const container=$(elementId);
+function makeCell(value, right = false) {
+  const cell = document.createElement("td");
+
+  cell.textContent = value;
+
+  if (right) {
+    cell.className = "right";
+  }
+
+  return cell;
+}
+
+function makeBadge(signal) {
+  const badge = document.createElement("span");
+
+  const type =
+    signal > 0 ? "buy" :
+    signal < 0 ? "sell" : "hold";
+
+  badge.className = "badge " + type;
+
+  badge.textContent =
+    type.toUpperCase();
+
+  return badge;
+}
+
+// ==========================================
+// SVG CHART
+// ==========================================
+
+function drawChart(elementId, series, count) {
+  const container = $(elementId);
+
   container.replaceChildren();
 
-  if(labelsCount<2) {
-    container.innerHTML=
-      '<div class="chart-empty">Pas assez de données.</div>';
+  const allValues = series.flatMap(s =>
+    s.values.filter(
+      v => typeof v === "number" &&
+           Number.isFinite(v)
+    )
+  );
+
+  if (count < 2 || !allValues.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "Données insuffisantes.";
+    container.appendChild(empty);
     return;
   }
 
-  const values=series.flatMap(s=>s.values)
-    .filter(v=>typeof v==="number" && Number.isFinite(v));
+  const W = 980;
+  const H = 370;
+  const L = 88;
+  const R = 20;
+  const T = 20;
+  const B = 38;
 
-  if(!values.length) {
-    container.innerHTML=
-      '<div class="chart-empty">Aucune donnée disponible.</div>';
-    return;
+  let minimum = Math.min(...allValues);
+  let maximum = Math.max(...allValues);
+
+  if (minimum === maximum) {
+    minimum -= 1;
+    maximum += 1;
   }
 
-  const W=1000,H=380;
-  const L=87,R=24,T=22,B=42;
+  const padding = (maximum - minimum) * 0.08;
+  minimum -= padding;
+  maximum += padding;
 
-  let min=Math.min(...values);
-  let max=Math.max(...values);
+  const x = i =>
+    L + (W - L - R) * i / (count - 1);
 
-  if(min===max) {
-    min-=1;
-    max+=1;
-  }
+  const y = v =>
+    T + (H - T - B) *
+    (maximum - v) / (maximum - minimum);
 
-  const pad=(max-min)*0.09;
-  min-=pad;
-  max+=pad;
+  const NS = "http://www.w3.org/2000/svg";
 
-  const x=i=>L+(W-L-R)*i/(labelsCount-1);
-  const y=v=>T+(H-T-B)*(max-v)/(max-min);
+  function svgNode(tag, attrs = {}) {
+    const node = document.createElementNS(NS, tag);
 
-  const NS="http://www.w3.org/2000/svg";
-  const svg=document.createElementNS(NS,"svg");
-  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
-  svg.setAttribute("role","img");
-  svg.setAttribute("aria-label","Graphique d'évolution");
-
-  function el(tag,attributes={}) {
-    const node=document.createElementNS(NS,tag);
-    for(const [k,v] of Object.entries(attributes)) {
-      node.setAttribute(k,String(v));
+    for (const [key, value] of Object.entries(attrs)) {
+      node.setAttribute(key, String(value));
     }
+
     return node;
   }
 
-  for(let i=0;i<=4;i++) {
-    const yy=T+(H-T-B)*i/4;
+  const svg = svgNode("svg", {
+    viewBox: `0 0 ${W} ${H}`,
+    role: "img",
+    "aria-label": "Graphique d'évolution"
+  });
 
-    svg.appendChild(el("line",{
-      x1:L,y1:yy,x2:W-R,y2:yy,
-      stroke:"#333148",
-      "stroke-dasharray":"4 6"
+  // Horizontal grid
+  for (let i = 0; i <= 4; i++) {
+    const yy = T + (H - T - B) * i / 4;
+
+    svg.appendChild(svgNode("line", {
+      x1: L,
+      y1: yy,
+      x2: W - R,
+      y2: yy,
+      stroke: "#40384d",
+      "stroke-dasharray": "5 6"
     }));
 
-    const t=el("text",{
-      x:6,y:yy+5,
-      fill:"#a3a0bc",
-      "font-size":"15"
+    const label = svgNode("text", {
+      x: 4,
+      y: yy + 5,
+      fill: "#b5aec8",
+      "font-size": 15
     });
 
-    t.textContent=number(max-(max-min)*i/4,1);
-    svg.appendChild(t);
+    label.textContent = fmt(
+      maximum - i * (maximum - minimum) / 4,
+      1
+    );
+
+    svg.appendChild(label);
   }
 
-  for(const s of series) {
-    let path="";
-    let started=false;
+  // Curves
+  for (const seriesItem of series) {
+    let path = "";
+    let started = false;
 
-    s.values.forEach((v,i)=>{
-      if(typeof v!=="number" || !Number.isFinite(v)) {
-        started=false;
+    seriesItem.values.forEach((value, index) => {
+      if (
+        typeof value !== "number" ||
+        !Number.isFinite(value)
+      ) {
+        started = false;
         return;
       }
 
-      path+=(started?" L ":" M ")+
-        x(i).toFixed(2)+" "+
-        y(v).toFixed(2);
+      path +=
+        (started ? " L " : " M ") +
+        x(index).toFixed(2) + " " +
+        y(value).toFixed(2);
 
-      started=true;
+      started = true;
     });
 
-    svg.appendChild(el("path",{
-      d:path,
-      fill:"none",
-      stroke:s.color,
-      "stroke-width":s.width || 2.8,
-      "stroke-linejoin":"round",
-      "stroke-linecap":"round",
-      opacity:s.opacity || 1
+    svg.appendChild(svgNode("path", {
+      d: path,
+      fill: "none",
+      stroke: seriesItem.color,
+      "stroke-width": seriesItem.width || 3,
+      "stroke-linejoin": "round",
+      "stroke-linecap": "round"
     }));
   }
 
   container.appendChild(svg);
 }
 
-function renderLegend(elementId,series) {
-  const target=$(elementId);
-  target.replaceChildren();
+function renderLegend(id, series) {
+  const container = $(id);
+  container.replaceChildren();
 
-  for(const s of series) {
-    const item=document.createElement("span");
-    const line=document.createElement("i");
+  for (const item of series) {
+    const span = document.createElement("span");
 
-    line.className="line-key";
-    line.style.background=s.color;
+    const line = document.createElement("i");
+    line.className = "swatch";
+    line.style.background = item.color;
 
-    item.append(line,document.createTextNode(s.name));
-    target.appendChild(item);
+    span.append(
+      line,
+      document.createTextNode(item.name)
+    );
+
+    container.appendChild(span);
   }
 }
 
-/* ============================================
-   PORTFOLIO
-============================================ */
+// ==========================================
+// PORTFOLIO
+// ==========================================
 
 function renderPortfolio() {
-  const h=state.holdings;
-  const cash=Number(h.money);
-  const values={};
-  let assets=0;
+  const holdings = state.holdings;
 
-  for(const p of PRODUCTS) {
-    const quantity=Number(h.products[p]||0);
-    const price=pricesOf(p).at(-1)||0;
-    values[p]=quantity*price;
-    assets+=values[p];
+  const cash = Number(holdings.money);
+
+  const values = {};
+  let assets = 0;
+
+  for (const product of PRODUCTS) {
+    const quantity = Number(
+      holdings.products[product] || 0
+    );
+
+    const price = priceSeries(product).at(-1) || 0;
+
+    values[product] = quantity * price;
+
+    assets += values[product];
   }
 
-  const total=cash+assets;
+  const total = cash + assets;
 
-  $("total-value").textContent=number(total);
-  $("cash-value").textContent=number(cash);
-  $("assets-value").textContent=number(assets);
-  $("cash-percent").textContent=total>0?pct(cash/total):"—";
+  text("total", fmt(total));
+  text("cash", fmt(cash));
+  text("assets", fmt(assets));
 
-  $("observation-count").textContent=
-    state.market.history.length+" observations";
+  text(
+    "cash-pct",
+    total > 0 ? pct(cash / total) : "—"
+  );
 
-  const allocation=$("allocation");
-  const legend=$("allocation-legend");
-  const positions=$("positions");
+  text(
+    "market-count",
+    state.market.history.length + " observations"
+  );
+
+  const allocation = $("allocation");
+  const legend = $("allocation-legend");
+  const positions = $("positions");
 
   allocation.replaceChildren();
   legend.replaceChildren();
   positions.replaceChildren();
 
-  const categories={cash,...values};
+  for (const [name, value] of Object.entries({
+    cash,
+    ...values
+  })) {
+    const share = total > 0 ? value / total : 0;
 
-  for(const [name,value] of Object.entries(categories)) {
-    const ratio=total>0?value/total:0;
+    const segment = document.createElement("div");
+    segment.style.width = (share * 100) + "%";
+    segment.style.background = COLORS[name];
 
-    const segment=document.createElement("div");
-    segment.style.width=(ratio*100)+"%";
-    segment.style.background=ASSET_COLORS[name];
     allocation.appendChild(segment);
 
-    const row=document.createElement("div");
-    row.className="legend-item";
+    const row = document.createElement("div");
+    row.className = "legend-row";
 
-    const left=document.createElement("div");
-    left.className="legend-left";
+    const left = document.createElement("div");
+    left.className = "legend-left";
 
-    const dot=document.createElement("span");
-    dot.className="dot";
-    dot.style.background=ASSET_COLORS[name];
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    dot.style.background = COLORS[name];
 
-    const label=document.createElement("span");
-    label.textContent=name==="cash"
-      ?"Liquidités"
-      :"Produit "+name;
+    const label = document.createElement("span");
+    label.textContent =
+      name === "cash"
+        ? "Liquidités"
+        : "Produit " + name;
 
-    left.append(dot,label);
+    left.append(dot, label);
 
-    const val=document.createElement("strong");
-    val.textContent=number(value)+" · "+pct(ratio);
+    const amount = document.createElement("strong");
+    amount.textContent =
+      fmt(value) + " · " + pct(share);
 
-    row.append(left,val);
+    row.append(left, amount);
     legend.appendChild(row);
   }
 
-  for(const p of PRODUCTS) {
-    const row=document.createElement("div");
-    row.className="position-item";
+  for (const product of PRODUCTS) {
+    const row = document.createElement("div");
+    row.className = "position-row";
 
-    const label=document.createElement("span");
-    label.textContent="Produit "+p+
-      " · "+number(h.products[p]||0)+" unités";
+    const label = document.createElement("span");
 
-    const val=document.createElement("strong");
-    val.textContent=number(values[p]);
+    label.textContent =
+      "Produit " + product + " · " +
+      fmt(holdings.products[product] || 0) +
+      " unités";
 
-    row.append(label,val);
+    const amount = document.createElement("strong");
+    amount.textContent = fmt(values[product]);
+
+    row.append(label, amount);
     positions.appendChild(row);
   }
 }
 
-/* ============================================
-   LIVE COMPARISON
-============================================ */
+// ==========================================
+// COMPARISON
+// ==========================================
 
 async function renderComparison() {
-  const container=$("comparison-bars");
-
   try {
-    const data=await fetchJSON(
+    const data = await getJSON(
       "./data/portfolio_comparison.json"
     );
 
-    const traders=[...data.comparison]
-      .sort((a,b)=>b.total_value-a.total_value);
-
-    const maximum=Math.max(
-      1,
-      ...traders.map(t=>Number(t.total_value))
+    const rows = [...data.comparison].sort(
+      (a, b) => b.total_value - a.total_value
     );
 
+    const max = Math.max(
+      1,
+      ...rows.map(row => Number(row.total_value))
+    );
+
+    const container = $("comparison-bars");
     container.replaceChildren();
 
-    for(const trader of traders) {
-      const item=document.createElement("div");
-      item.className="compare-item";
+    for (const trader of rows) {
+      const item = document.createElement("div");
+      item.className = "bar-item";
 
-      const top=document.createElement("div");
-      top.className="compare-top";
+      const heading = document.createElement("div");
+      heading.className = "bar-head";
 
-      const name=document.createElement("span");
-      name.textContent=trader.name;
+      const name = document.createElement("span");
+      name.textContent = trader.name;
 
-      const value=document.createElement("strong");
-      value.textContent=number(trader.total_value);
+      const value = document.createElement("strong");
+      value.textContent = fmt(trader.total_value);
 
-      top.append(name,value);
+      heading.append(name, value);
 
-      const track=document.createElement("div");
-      track.className="track";
+      const track = document.createElement("div");
+      track.className = "bar-track";
 
-      const fill=document.createElement("div");
-      fill.className="fill"+
-        (trader.trader_id==="aziz"?" mine":"");
+      const fill = document.createElement("div");
+      fill.className =
+        "bar-fill" +
+        (trader.trader_id === "aziz" ? " mine" : "");
 
-      fill.style.width=
-        Number(trader.total_value)/maximum*100+"%";
+      fill.style.width =
+        (Number(trader.total_value) / max * 100) + "%";
 
       track.appendChild(fill);
 
-      const meta=document.createElement("div");
-      meta.className="compare-meta";
-      meta.textContent=
-        "Liquidités : "+number(trader.cash)+
-        " · Actifs : "+number(trader.assets_value);
+      const sub = document.createElement("div");
+      sub.className = "bar-sub";
 
-      item.append(top,track,meta);
+      sub.textContent =
+        "Liquidités : " + fmt(trader.cash) +
+        " · Actifs : " + fmt(trader.assets_value);
+
+      item.append(heading, track, sub);
       container.appendChild(item);
     }
 
-    $("comparison-date").textContent=
-      "Instantané publié : "+dateText(data.timestamp);
+    text(
+      "comparison-status",
+      "Instantané publié : " + formatDate(data.timestamp)
+    );
 
-  } catch(e) {
-    container.textContent=
-      "Comparaison indisponible : "+e.message;
+    if (rows.length) {
+      text(
+        "leader-insight",
+        "Valeur la plus élevée : " +
+        rows[0].name + " (" +
+        fmt(rows[0].total_value) + ")"
+      );
+    }
+
+    const mine = rows.find(
+      row => row.trader_id === "aziz"
+    );
+
+    const bestReference = rows.find(
+      row => row.trader_id !== "aziz"
+    );
+
+    if (mine && bestReference) {
+      const difference =
+        mine.total_value - bestReference.total_value;
+
+      text(
+        "margin-insight",
+        "Écart avec la meilleure référence : " +
+        fmt(difference)
+      );
+    }
+
+  } catch (error) {
+    text(
+      "comparison-bars",
+      "Comparaison indisponible : " + error.message
+    );
   }
 }
 
-/* ============================================
-   HISTORICAL PERFORMANCE
-============================================ */
+// ==========================================
+// HISTORICAL PERFORMANCE
+// ==========================================
 
 async function renderPerformance() {
-  const chart=$("performance-chart");
-  const tbody=$("performance-table");
+  const chart = $("performance-chart");
+  const tbody = $("performance-table");
 
   try {
-    const data=await fetchJSON(
+    const data = await getJSON(
       "./data/portfolio_history.json"
     );
 
-    const snapshots=(data.snapshots||[])
-      .filter(s=>s && s.timestamp && Array.isArray(s.comparison))
-      .sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
+    const snapshots = (data.snapshots || [])
+      .filter(s =>
+        s &&
+        s.timestamp &&
+        Array.isArray(s.comparison)
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.timestamp) - new Date(b.timestamp)
+      );
 
-    $("snapshot-count").textContent=
-      snapshots.length+" relevé(s)";
+    text(
+      "snapshot-count",
+      snapshots.length + " relevé(s)"
+    );
 
     tbody.replaceChildren();
 
-    if(snapshots.length<2) {
-      chart.innerHTML=
-        '<div class="chart-empty">'+
-        'Un deuxième relevé est nécessaire '+
-        'pour tracer la performance historique.'+
-        '</div>';
-
-      $("performance-period").textContent=
-        "L'historique commence au premier relevé collecté.";
-
-      $("performance-legend").replaceChildren();
-      return;
-    }
-
-    const series=TRADERS.map(t=>({
-      ...t,
-      values:snapshots.map(s=>{
-        const row=s.comparison.find(
-          item=>item.trader_id===t.id
+    const series = TRADERS.map(trader => ({
+      ...trader,
+      values: snapshots.map(snapshot => {
+        const row = snapshot.comparison.find(
+          item => item.trader_id === trader.id
         );
 
-        const value=row?Number(row.total_value):null;
+        if (!row || row.total_value == null) {
+          return null;
+        }
 
-        return value!==null && Number.isFinite(value)
+        const value = Number(row.total_value);
+
+        return Number.isFinite(value)
           ? value
           : null;
       })
     }));
 
-    drawLineChart(
-      "performance-chart",
-      series,
-      snapshots.length
-    );
+    if (snapshots.length < 2) {
+      chart.replaceChildren();
 
-    renderLegend("performance-legend",series);
+      const empty = document.createElement("div");
+      empty.className = "empty";
 
-    for(const trader of series) {
-      const first=trader.values[0];
-      const last=trader.values.at(-1);
+      empty.textContent =
+        snapshots.length === 0
+          ? "Aucun relevé historique disponible."
+          : "Un seul relevé disponible. Les valeurs " +
+            "sont affichées ci-dessous, mais une courbe " +
+            "nécessite deux relevés distincts.";
 
-      const valid=trader.values.filter(
-        v=>typeof v==="number" && Number.isFinite(v)
+      chart.appendChild(empty);
+      $("performance-legend").replaceChildren();
+
+    } else {
+      drawChart(
+        "performance-chart",
+        series,
+        snapshots.length
       );
 
-      const canMeasure=
-        Number.isFinite(first) &&
-        Number.isFinite(last) &&
-        first>0;
-
-      const gain=canMeasure
-        ?last/first-1
-        :null;
-
-      const drawdown=valid.length>=2 &&
-        trader.values.every(Number.isFinite)
-        ?maxDrawdown(trader.values)
-        :null;
-
-      const vol=trader.values.every(Number.isFinite)
-        ?volatility(trader.values)
-        :null;
-
-      const tr=document.createElement("tr");
-
-      const cells=[
-        trader.name,
-        Number.isFinite(first)?number(first):"—",
-        Number.isFinite(last)?number(last):"—",
-        gain===null?"—":pct(gain),
-        drawdown===null?"—":pct(drawdown),
-        vol===null?"—":pct(vol)
-      ];
-
-      cells.forEach((value,i)=>{
-        const td=document.createElement("td");
-        td.textContent=value;
-        if(i>0) td.className="right";
-
-        if(i===3 && gain!==null) {
-          td.classList.add(gain>=0?"good":"bad");
-        }
-
-        tr.appendChild(td);
-      });
-
-      tbody.appendChild(tr);
+      renderLegend("performance-legend", series);
     }
 
-    $("performance-period").textContent=
-      "Période enregistrée : "+
-      dateText(snapshots[0].timestamp)+
-      " → "+
-      dateText(snapshots.at(-1).timestamp)+
-      ". Les mesures dépendent de la fréquence et du nombre de relevés.";
+    for (const trader of series) {
+      const values = trader.values;
 
-  } catch(e) {
-    chart.textContent=
-      "Historique indisponible : "+e.message;
-    $("performance-period").textContent="";
+      const first = values[0];
+      const last = values.at(-1);
+
+      const complete =
+        values.length > 0 &&
+        values.every(Number.isFinite);
+
+      const canReturn =
+        snapshots.length >= 2 &&
+        complete &&
+        first > 0;
+
+      const performance = canReturn
+        ? last / first - 1
+        : null;
+
+      const canRisk =
+        snapshots.length >= 3 &&
+        complete &&
+        first > 0;
+
+      const drawdown = canRisk
+        ? maxDrawdown(values)
+        : null;
+
+      const vol = canRisk
+        ? volatility(values)
+        : null;
+
+      const row = document.createElement("tr");
+
+      const cells = [
+        trader.name,
+        Number.isFinite(first) ? fmt(first) : "—",
+        Number.isFinite(last) ? fmt(last) : "—",
+        performance === null ? "—" : pct(performance),
+        drawdown === null ? "—" : pct(drawdown),
+        vol === null ? "—" : pct(vol)
+      ];
+
+      cells.forEach((value, index) => {
+        const cell = makeCell(value, index > 0);
+
+        if (index === 3 && performance !== null) {
+          cell.classList.add(
+            performance >= 0 ? "good" : "bad"
+          );
+        }
+
+        row.appendChild(cell);
+      });
+
+      tbody.appendChild(row);
+    }
+
+    if (snapshots.length) {
+      text(
+        "performance-note",
+        "Période observée : " +
+        formatDate(snapshots[0].timestamp) +
+        " au " +
+        formatDate(snapshots.at(-1).timestamp) +
+        ". Les mesures de risque nécessitent " +
+        "au moins trois relevés."
+      );
+    } else {
+      text(
+        "performance-note",
+        "En attente des premiers relevés."
+      );
+    }
+
+  } catch (error) {
+    text(
+      "performance-chart",
+      "Historique indisponible : " + error.message
+    );
     tbody.replaceChildren();
   }
 }
 
-/* ============================================
-   MARKET
-============================================ */
+// ==========================================
+// MARKET TABLE
+// ==========================================
 
-function renderMarket() {
-  const tbody=$("market-table");
+function renderMarketTable() {
+  const tbody = $("market-table");
   tbody.replaceChildren();
 
-  for(const p of PRODUCTS) {
-    const prices=pricesOf(p);
+  for (const product of PRODUCTS) {
+    const prices = priceSeries(product);
+    const signal = rawSignal(prices);
 
-    const columns=[
-      p,
-      prices.at(-1),
-      averageLast(prices,5),
-      averageLast(prices,12),
-      averageLast(prices,30)
+    const row = document.createElement("tr");
+
+    const values = [
+      product,
+      prices.length ? fmt(prices.at(-1), 4) : "—",
+      prices.length >= 5
+        ? fmt(lastAverage(prices, 5), 4) : "—",
+      prices.length >= 12
+        ? fmt(lastAverage(prices, 12), 4) : "—",
+      prices.length >= 30
+        ? fmt(lastAverage(prices, 30), 4) : "—"
     ];
 
-    const signal=computeSignal(prices);
-    const tr=document.createElement("tr");
-
-    columns.forEach((v,i)=>{
-      const td=document.createElement("td");
-      td.textContent=i===0
-        ?v
-        :v===null || v===undefined
-          ?"—"
-          :number(v,4);
-
-      if(i>0) td.className="right";
-      tr.appendChild(td);
+    values.forEach((value, index) => {
+      row.appendChild(makeCell(value, index > 0));
     });
 
-    const td=document.createElement("td");
-    const badge=document.createElement("span");
+    const signalCell = document.createElement("td");
+    signalCell.appendChild(makeBadge(signal));
 
-    badge.className="signal "+
-      (signal>0?"buy":signal<0?"sell":"hold");
+    row.append(
+      signalCell,
+      makeCell(signalReason(prices))
+    );
 
-    badge.textContent=
-      (signal>0?"BUY":signal<0?"SELL":"HOLD")+
-      " "+(signal>0?"+":"")+signal.toFixed(3);
-
-    td.appendChild(badge);
-    tr.appendChild(td);
-    tbody.appendChild(tr);
+    tbody.appendChild(row);
   }
-
-  renderMarketChart();
 }
 
-function renderMarketChart() {
-  const p=state.selected;
-  const prices=pricesOf(p);
+// ==========================================
+// SELECTED PRODUCT
+// ==========================================
 
-  if(prices.length<2) {
-    $("market-chart").innerHTML=
-      '<div class="chart-empty">Données insuffisantes.</div>';
-    return;
-  }
+function renderSelectedProduct() {
+  const product = state.product;
+  const prices = priceSeries(product);
 
-  drawLineChart("market-chart",[
-    {name:"Prix",color:"#aa8bff",values:prices,width:3},
-    {name:"MM5",color:"#2bd8b7",values:movingAverage(prices,5)},
-    {name:"MM12",color:"#ffca78",values:movingAverage(prices,12)},
-    {name:"MM30",color:"#ff6d8e",values:movingAverage(prices,30)}
-  ],prices.length);
+  drawChart(
+    "price-chart",
+    [
+      {
+        name: "Prix",
+        color: "#ba9aff",
+        values: prices,
+        width: 3.5
+      },
+      {
+        name: "MM5",
+        color: "#29d9ad",
+        values: movingAverage(prices, 5)
+      },
+      {
+        name: "MM12",
+        color: "#f7bf71",
+        values: movingAverage(prices, 12)
+      },
+      {
+        name: "MM30",
+        color: "#ff7796",
+        values: movingAverage(prices, 30)
+      }
+    ],
+    prices.length
+  );
 
-  $("market-heading").textContent=
-    "Produit "+p+" — Évolution des prix";
+  text(
+    "chart-title",
+    "Produit " + product + " — Évolution des prix"
+  );
 
-  $("market-summary").textContent=
-    prices.length+" observations · Dernier prix : "+
-    number(prices.at(-1),4);
+  text(
+    "chart-subtitle",
+    prices.length + " observations · Dernier prix : " +
+    (prices.length ? fmt(prices.at(-1), 4) : "—")
+  );
 
-  renderPriceRisk();
+  text("risk-product", product);
+
+  const vol = volatility(prices);
+  const dd = maxDrawdown(prices);
+
+  const performance =
+    prices.length > 1 && prices[0] > 0
+      ? prices.at(-1) / prices[0] - 1
+      : null;
+
+  text("price-vol", vol === null ? "—" : pct(vol));
+  text("price-dd", dd === null ? "—" : pct(dd));
+
+  text(
+    "price-return",
+    performance === null ? "—" : pct(performance)
+  );
 }
 
-/* ============================================
-   STRATEGY
-============================================ */
+// ==========================================
+// SIMULATED SIGNALS
+// ==========================================
 
-function renderCurrentSignals() {
-  const container=$("current-signals");
+function renderSignals() {
+  let cash = Number(state.holdings.money);
+
+  const positions = {};
+
+  for (const product of PRODUCTS) {
+    positions[product] = Number(
+      state.holdings.products[product] || 0
+    );
+  }
+
+  const container = $("signals");
   container.replaceChildren();
 
-  let remainingCash=Number(state.holdings.money);
+  for (const product of PRODUCTS) {
+    const prices = priceSeries(product);
+    const price = prices.at(-1);
 
-  const positions={};
+    const raw = rawSignal(prices);
 
-  for(const p of PRODUCTS) {
-    positions[p]=Number(
-      state.holdings.products[p]||0
-    );
-  }
-
-  for(const p of PRODUCTS) {
-    const prices=pricesOf(p);
-    const price=prices.at(-1);
-
-    const raw=computeSignal(prices);
-
-    const safe=secureSignal(
-      raw,price,remainingCash,positions[p]
+    const signal = secureSignal(
+      raw,
+      price,
+      cash,
+      positions[product]
     );
 
-    const units=safe*100;
-    remainingCash-=units*price;
-    positions[p]+=units;
+    const units = signal * 100;
 
-    const action=safe>0?"BUY":safe<0?"SELL":"HOLD";
+    cash -= units * price;
+    positions[product] += units;
 
-    const item=document.createElement("div");
-    item.className="signal-item";
+    const row = document.createElement("div");
+    row.className = "signal-row";
 
-    const name=document.createElement("strong");
-    name.textContent=p;
+    const name = document.createElement("strong");
+    name.textContent = product;
 
-    const badge=document.createElement("span");
-    badge.className="signal "+action.toLowerCase();
-    badge.textContent=action;
+    const value = document.createElement("strong");
+    value.textContent =
+      (signal > 0 ? "+" : "") +
+      signal.toFixed(3);
 
-    const value=document.createElement("strong");
-    value.textContent=
-      (safe>0?"+":"")+safe.toFixed(3);
+    const quantity = document.createElement("small");
+    quantity.textContent =
+      fmt(Math.abs(units)) + " unités simulées";
 
-    const quantity=document.createElement("small");
-    quantity.textContent=
-      number(Math.abs(units))+" unités simulées";
+    row.append(
+      name,
+      makeBadge(signal),
+      value,
+      quantity
+    );
 
-    item.append(name,badge,value,quantity);
-    container.appendChild(item);
+    container.appendChild(row);
   }
 
-  $("simulated-cash").textContent=
-    "Liquidités restantes simulées : "+
-    number(remainingCash);
+  text(
+    "simulation-cash",
+    "Liquidités restantes après simulation : " +
+    fmt(cash)
+  );
 }
 
+// ==========================================
+// HISTORICAL SIGNALS
+// ==========================================
+
 function renderSignalHistory() {
-  const rows=state.market.history;
-  const tbody=$("signal-history");
+  const history = state.market.history;
+  const tbody = $("signal-history");
 
   tbody.replaceChildren();
 
-  for(
-    let i=Math.max(29,rows.length-12);
-    i<rows.length;
+  for (
+    let i = Math.max(29, history.length - 12);
+    i < history.length;
     i++
   ) {
-    const tr=document.createElement("tr");
+    const row = document.createElement("tr");
 
-    const observation=document.createElement("td");
-    observation.textContent="#"+(i+1);
-    tr.appendChild(observation);
+    row.appendChild(makeCell("#" + (i + 1)));
 
-    for(const p of PRODUCTS) {
-      const values=rows.slice(0,i+1)
-        .map(row=>row[p]==null?NaN:Number(row[p]))
+    for (const product of PRODUCTS) {
+      const prices = history
+        .slice(0, i + 1)
+        .map(item => (
+          item[product] == null
+            ? NaN
+            : Number(item[product])
+        ))
         .filter(Number.isFinite);
 
-      const signal=computeSignal(values);
-      const action=signal>0?"BUY":signal<0?"SELL":"HOLD";
+      const cell = document.createElement("td");
 
-      const td=document.createElement("td");
-      const badge=document.createElement("span");
+      const signal = rawSignal(prices);
 
-      badge.className="signal "+action.toLowerCase();
-      badge.textContent=action;
+      const badge = makeBadge(signal);
+      badge.title = signalReason(prices);
 
-      td.appendChild(badge);
-      tr.appendChild(td);
+      cell.appendChild(badge);
+      row.appendChild(cell);
     }
 
-    tbody.appendChild(tr);
+    tbody.appendChild(row);
   }
 }
 
-/* ============================================
-   PRICE RISK
-============================================ */
+// ==========================================
+// OFFICIAL DECISIONS
+// ==========================================
 
-function renderPriceRisk() {
-  const p=state.selected;
-  const prices=pricesOf(p);
+async function renderOfficialDecisions() {
+  try {
+    const decisions = await getJSON(DECISION_URL);
 
-  const vol=volatility(prices);
-  const dd=maxDrawdown(prices);
+    const container = $("official-decisions");
+    container.replaceChildren();
 
-  const gain=prices.length>=2 && prices[0]>0
-    ?prices.at(-1)/prices[0]-1
-    :null;
+    const wrapper = document.createElement("div");
+    wrapper.className = "scroll";
 
-  $("risk-product").textContent=p;
+    const table = document.createElement("table");
 
-  $("price-volatility").textContent=
-    vol===null?"—":pct(vol);
+    const head = document.createElement("thead");
+    const headRow = document.createElement("tr");
 
-  $("price-drawdown").textContent=
-    dd===null?"—":pct(dd);
+    for (const heading of [
+      "Produit",
+      "Signal publié",
+      "Interprétation"
+    ]) {
+      const th = document.createElement("th");
+      th.textContent = heading;
+      headRow.appendChild(th);
+    }
 
-  $("price-return").textContent=
-    gain===null?"—":pct(gain);
+    head.appendChild(headRow);
+
+    const body = document.createElement("tbody");
+
+    for (const product of PRODUCTS) {
+      const signal = Number(decisions[product]);
+
+      const row = document.createElement("tr");
+
+      row.appendChild(makeCell(product));
+
+      row.appendChild(
+        makeCell(
+          Number.isFinite(signal)
+            ? (signal > 0 ? "+" : "") + signal.toFixed(3)
+            : "Invalide"
+        )
+      );
+
+      const interpretation = document.createElement("td");
+
+      if (
+        Number.isFinite(signal) &&
+        Math.abs(signal) <= 1
+      ) {
+        interpretation.append(
+          makeBadge(signal),
+          document.createTextNode(
+            " · " + fmt(Math.abs(signal) * 100) +
+            " unités demandées"
+          )
+        );
+      } else {
+        interpretation.textContent = "Signal invalide";
+      }
+
+      row.appendChild(interpretation);
+      body.appendChild(row);
+    }
+
+    table.append(head, body);
+    wrapper.appendChild(table);
+    container.appendChild(wrapper);
+
+    text(
+      "official-note",
+      "Dernière date indiquée dans decision.json : " +
+      (
+        decisions.updated_at
+          ? formatDate(decisions.updated_at)
+          : "Non indiquée"
+      ) +
+      ". Une décision publiée ne prouve pas " +
+      "qu'une transaction a été exécutée."
+    );
+
+  } catch (error) {
+    text(
+      "official-decisions",
+      "Décisions officielles indisponibles : " +
+      error.message
+    );
+  }
 }
 
-/* ============================================
-   REFRESH & EVENTS
-============================================ */
+// ==========================================
+// REFRESH
+// ==========================================
 
-async function refreshDashboard() {
-  const status=$("status");
-  const button=$("refresh");
+async function refresh() {
+  const status = $("status");
+  const button = $("refresh");
 
-  status.textContent="● Chargement...";
   status.classList.remove("error");
-  button.disabled=true;
+  status.textContent = "● Chargement...";
+  button.disabled = true;
 
   try {
-    const [market,holdings]=await Promise.all([
-      fetchJSON(ROOT+"docs/data/market.json"),
-      fetchJSON(ROOT+"traders/aziz/holdings.json")
+    const [market, holdings] = await Promise.all([
+      getJSON(ROOT + "docs/data/market.json"),
+      getJSON(ROOT + "traders/aziz/holdings.json")
     ]);
 
-    if(
+    if (
       !Array.isArray(market.history) ||
       !holdings.products
     ) {
       throw new Error("Données ENSIM invalides");
     }
 
-    state.market=market;
-    state.holdings=holdings;
+    state.market = market;
+    state.holdings = holdings;
 
     renderPortfolio();
-    renderMarket();
-    renderCurrentSignals();
+    renderMarketTable();
+    renderSelectedProduct();
+    renderSignals();
     renderSignalHistory();
 
-    // Independent sections: one unavailable JSON
-    // must not block the rest of the dashboard.
     await Promise.all([
       renderComparison(),
-      renderPerformance()
+      renderPerformance(),
+      renderOfficialDecisions()
     ]);
 
-    status.textContent="● Données chargées";
+    status.textContent = "● Données chargées";
 
-  } catch(e) {
-    console.error(e);
-    status.textContent="● Connexion échouée";
+  } catch (error) {
+    console.error(error);
+
+    status.textContent = "● Erreur de connexion";
     status.classList.add("error");
+    status.title = error.message;
+
   } finally {
-    button.disabled=false;
+    button.disabled = false;
   }
 }
 
+// ==========================================
+// EVENTS
+// ==========================================
+
 document.querySelectorAll("[data-product]")
-  .forEach(button=>{
-    button.addEventListener("click",()=>{
-      state.selected=button.dataset.product;
+  .forEach(button => {
+    button.addEventListener("click", () => {
+      state.product = button.dataset.product;
 
       document.querySelectorAll("[data-product]")
-        .forEach(b=>{
-          b.classList.toggle(
+        .forEach(other => {
+          other.classList.toggle(
             "active",
-            b.dataset.product===state.selected
+            other.dataset.product === state.product
           );
         });
 
-      if(state.market) renderMarketChart();
+      if (state.market) {
+        renderSelectedProduct();
+      }
     });
   });
 
-$("refresh").addEventListener(
-  "click",
-  refreshDashboard
-);
+$("refresh").addEventListener("click", refresh);
 
 document.querySelectorAll("nav a")
-  .forEach(link=>{
-    link.addEventListener("click",()=>{
+  .forEach(link => {
+    link.addEventListener("click", () => {
       document.querySelectorAll("nav a")
-        .forEach(a=>a.classList.remove("active"));
+        .forEach(item => {
+          item.classList.remove("active");
+        });
 
       link.classList.add("active");
     });
   });
 
-refreshDashboard();
+refresh();
 </script>
 
 </body>
