@@ -116,6 +116,45 @@
           "total_value": 18005.8
         }
       ]
+    },
+    {
+      "timestamp": "2026-11-27T17:51:49.568225+00:00",
+      "market_observations": 387,
+      "prices": {
+        "A": 5.3008,
+        "B": 12.7336,
+        "C": 0.9792
+      },
+      "comparison": [
+        {
+          "name": "Mon trader",
+          "trader_id": "aziz",
+          "cash": 1000.0,
+          "assets_value": 19013.6,
+          "total_value": 20013.6
+        },
+        {
+          "name": "Random Trader",
+          "trader_id": "random_trader",
+          "cash": 4009.91,
+          "assets_value": 15929.78,
+          "total_value": 19939.69
+        },
+        {
+          "name": "Random Buyer",
+          "trader_id": "random_buyer",
+          "cash": 0.0,
+          "assets_value": 19961.57,
+          "total_value": 19961.57
+        },
+        {
+          "name": "Random Seller",
+          "trader_id": "random_seller",
+          "cash": 18005.8,
+          "assets_value": 0.0,
+          "total_value": 18005.8
+        }
+      ]
     }
   ]
 }
