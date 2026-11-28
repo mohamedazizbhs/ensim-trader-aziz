@@ -1,31 +1,31 @@
 {
-  "timestamp": "2026-11-27T17:51:49.568225+00:00",
+  "timestamp": "2026-11-28T07:34:17.381895+00:00",
   "prices": {
-    "A": 5.3008,
-    "B": 12.7336,
-    "C": 0.9792
+    "A": 5.3786,
+    "B": 12.7545,
+    "C": 0.8515
   },
   "comparison": [
     {
       "name": "Mon trader",
       "trader_id": "aziz",
-      "cash": 1000.0,
-      "assets_value": 19013.6,
-      "total_value": 20013.6
+      "cash": 838.18,
+      "assets_value": 19146.41,
+      "total_value": 19984.6
     },
     {
       "name": "Random Trader",
       "trader_id": "random_trader",
-      "cash": 4009.91,
-      "assets_value": 15929.78,
-      "total_value": 19939.69
+      "cash": 4277.35,
+      "assets_value": 15708.58,
+      "total_value": 19985.93
     },
     {
       "name": "Random Buyer",
       "trader_id": "random_buyer",
       "cash": 0.0,
-      "assets_value": 19961.57,
-      "total_value": 19961.57
+      "assets_value": 19931.77,
+      "total_value": 19931.77
     },
     {
       "name": "Random Seller",
